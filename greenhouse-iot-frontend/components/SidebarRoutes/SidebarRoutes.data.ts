@@ -23,6 +23,11 @@ export const dataGeneralSidebar = [
         icon: Calendar,
         label: 'Calendar',
         href: '/task'
+    },
+    {
+        icon: Calendar,
+        label: 'Calendar',
+        href: '/task'
     }
 ]
 

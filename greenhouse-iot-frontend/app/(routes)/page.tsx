@@ -1,13 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
 import { CardSummary } from "./components/CardSummary";
 import { BookOpenCheck, LeafyGreen, Waypoints } from "lucide-react";
-import { CustomTooltip } from "@/components/CustomTooltip";
+import LastCustomers from "./components/LastCustomers/LastCustomers";
+import SalesDistributors from "./components/SalesDistributors/SalesDistributors";
+import { GreenHouseImage } from "./components/GreenHouseImage";
 
 
 export default function Home() {
 
   const cardData = [
+    {
+      icon: LeafyGreen,
+      total: "14",
+      average: 15,
+      title: "Green Houses",
+      tooltipText: "Tooltip 1",
+    },
     {
       icon: LeafyGreen,
       total: "14",
@@ -34,22 +41,56 @@ export default function Home() {
 
   return (
     <div>
-      <h2 className="text-2xl mb-4">Dashboard</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-20">
-        {cardData.map((card, index) => (
-          <CardSummary
-            key={index}
-            icon={card.icon}
-            total={card.total}
-            average={card.average}
-            title={card.title}
-            tooltipText={card.tooltipText}
-          />
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-4 max-h-80 ">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-24 ">
+          <div className="col-span-2 flex justify-center text-2xl">Sensors</div>
+          {cardData.map((card, index) => (
+            <CardSummary
+              key={index}
+              icon={card.icon}
+              total={card.total}
+              average={card.average}
+              title={card.title}
+              tooltipText={card.tooltipText}
+            />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-24">
+        <div className="col-span-2 flex justify-center text-2xl">Actuators</div>
+
+          {cardData.map((card, index) => (
+            <CardSummary
+              key={index}
+              icon={card.icon}
+              total={card.total}
+              average={card.average}
+              title={card.title}
+              tooltipText={card.tooltipText}
+            />
+          ))}
+        </div>
+
+        <div className="col-span-1  max-h-80">
+        <div className="col-span-2 flex justify-center text-2xl">GPS Information</div>
+
+          <GreenHouseImage />
+
+        </div>
+
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-x-10 mt-12">
-        <p>Last Customers</p>
-        <p>Sales Distributors</p>
+      <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-x-2 mt-12">
+      <div className="col-span-2 flex justify-center text-2xl">Flow Charts</div>
+
+        <div className="col-span-1 flexflex-col">
+        <SalesDistributors />
+
+        </div>
+        <div className="col-span-1 flex  flex-col">
+          <SalesDistributors />
+        </div>
+
       </div>
     </div>
   );
