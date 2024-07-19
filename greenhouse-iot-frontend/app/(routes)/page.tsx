@@ -1,51 +1,89 @@
 import { CardSummary } from "./components/CardSummary";
-import { BookOpenCheck, LeafyGreen, Waypoints } from "lucide-react";
+import { BookOpenCheck, Zap, Fuel, Thermometer,Droplet,SunDim,Sprout, Heater, Lightbulb, Fan } from "lucide-react";
 import LastCustomers from "./components/LastCustomers/LastCustomers";
 import SalesDistributors from "./components/SalesDistributors/SalesDistributors";
 import { GreenHouseImage } from "./components/GreenHouseImage";
 
-
 export default function Home() {
 
-  const cardData = [
+  const cardDataSensors = [
     {
-      icon: LeafyGreen,
-      total: "14",
+      icon: Thermometer,
+      total: "25 C / 77 F",
       average: 15,
-      title: "Green Houses",
+      title: "Temperature:",
       tooltipText: "Tooltip 1",
     },
     {
-      icon: LeafyGreen,
-      total: "14",
+      icon: Droplet,
+      total: "100%",
       average: 15,
-      title: "Green Houses",
-      tooltipText: "Tooltip 1",
+      title: "Humidity:",
+      tooltipText: "ON / OFF",
     },
     {
-      icon: BookOpenCheck,
-      total: "12.450",
+      icon: SunDim,
+      total: "50 Lux",
       average: 55,
-      title: "Title 2",
+      title: "Brightness",
       tooltipText: "Tooltip 2",
     },
     {
-      icon: Waypoints,
-      total: "12.450",
+      icon: Sprout,
+      total: "80%",
       average: 75,
-      title: "Title 3",
-      tooltipText: "Tooltip 3",
+      title: "Soil Hum",
+      tooltipText: "ON / OFF",
+    },
+    {
+      icon: Fuel,
+      total: "20PPM",
+      average: 75,
+      title: "CO2",
+      tooltipText: "ON / OFF",
+    },
+  ];
+
+
+  const cardDataActuators = [
+    {
+      icon: Fan,
+      total: "80 RPM",
+      average: 15,
+      title: "FAN 1",
+      tooltipText: "Tooltip 1",
+    },
+    {
+      icon: Lightbulb,
+      total: "ON / OFF",
+      average: 15,
+      title: "LAMP 1",
+      tooltipText: "ON / OFF",
+    },
+    {
+      icon: Zap,
+      total: "ON / OFF",
+      average: 55,
+      title: "PUMP 1",
+      tooltipText: "Tooltip 2",
+    },
+    {
+      icon: Heater,
+      total: "ON / OFF",
+      average: 75,
+      title: "HEATER 1",
+      tooltipText: "ON / OFF",
     },
   ];
 
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-4 max-h-80 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-4  min-h-[400px] ">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-24 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-24">
           <div className="col-span-2 flex justify-center text-2xl">Sensors</div>
-          {cardData.map((card, index) => (
+          {cardDataSensors.map((card, index) => (
             <CardSummary
               key={index}
               icon={card.icon}
@@ -60,7 +98,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-24">
         <div className="col-span-2 flex justify-center text-2xl">Actuators</div>
 
-          {cardData.map((card, index) => (
+          {cardDataActuators.map((card, index) => (
             <CardSummary
               key={index}
               icon={card.icon}
@@ -80,8 +118,8 @@ export default function Home() {
         </div>
 
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-x-2 mt-12">
-      <div className="col-span-2 flex justify-center text-2xl">Flow Charts</div>
+      <div className="grid grid-cols-1 xl:grid-cols-4 md:gap-x-2 mt-12">
+      <div className="col-span-4 flex justify-center text-2xl">Flow Charts</div>
 
         <div className="col-span-1 flexflex-col">
         <SalesDistributors />
@@ -90,7 +128,12 @@ export default function Home() {
         <div className="col-span-1 flex  flex-col">
           <SalesDistributors />
         </div>
-
+        <div className="col-span-1 flex  flex-col">
+          <SalesDistributors />
+        </div>
+        <div className="col-span-1 flex  flex-col">
+          <SalesDistributors />
+        </div>
       </div>
     </div>
   );

@@ -17,17 +17,7 @@ export const dataGeneralSidebar = [
     {
         icon: LeafyGreen,
         label: 'Green Houses',
-        href: '/greenhouse'
-    },
-    {
-        icon: Calendar,
-        label: 'Calendar',
-        href: '/task'
-    },
-    {
-        icon: Calendar,
-        label: 'Calendar',
-        href: '/task'
+        href: '/greenhouses'
     }
 ]
 

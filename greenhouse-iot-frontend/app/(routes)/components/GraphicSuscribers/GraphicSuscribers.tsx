@@ -7,7 +7,7 @@ import { dataGraphics } from "./GraphicSuscribers.data";
 
 export function GraphicSuscribers() {
     return (
-        <div className="mt-5">
+        <div className="mt-2">
             <p className="text-3xl mb-3">24.479</p>
             <div className="flex gap-x-5 mb-5">
                 <div className="flex items-center gap-2 px-3 text-md bg-[#16c877] text-white rounded-xl w-fit">
