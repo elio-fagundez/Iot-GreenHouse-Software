@@ -1,1 +1,0 @@
-Here place pictures used in the project 

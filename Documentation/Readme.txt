@@ -1,1 +1,0 @@
-Here place all documentation relevant and important about the project
