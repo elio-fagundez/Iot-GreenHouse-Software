@@ -25,6 +25,7 @@ import { toast } from "@/components/ui/use-toast"
 
 interface FormCreateCustomerProps {
   setOpenModalCreate: (open: boolean) => void;
+  greenhouseData: any;
 }
 
 const formSchema = z.object({
@@ -37,49 +38,59 @@ const formSchema = z.object({
 })
 
 
-export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenModalCreate }) => {
+export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenModalCreate, greenhouseData }) => {
   const [photoUploaded, setPhotoUploaded] = useState(false);
-  // 1. Define your form.
+  console.log("greenhouseData", greenhouseData);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      country: "",
-      website: "",
-      phone: "",
-      cif: "",
-      profileImage: "",
+      name: greenhouseData?.name || "",
+      country: greenhouseData?.country || "",
+      website: greenhouseData?.website || "",
+      phone: greenhouseData?.phone || "",
+      cif: greenhouseData?.cif || "",
+      profileImage: greenhouseData?.profileImage || "",
     },
   })
 
   const { isValid } = form.formState
+const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    let url = `${apiUrl}/api/greenhouses/`;
+    let method = 'POST';
+    let successMessage = "Green House created successfully";
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-      const response = await fetch(`${apiUrl}/api/greenhouses/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Something went wrong');
-      }
-        setOpenModalCreate(false);
-      toast({
-        title: "Green House created successfully",
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error creating Green House",
-      });
+    // Si greenhouseData existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
+    if (greenhouseData && greenhouseData.id) {
+      url = `${apiUrl}/api/greenhouses/${greenhouseData.id}`;
+      method = 'PUT';
+      successMessage = "Green House updated successfully";
     }
+
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong');
+    }
+    setOpenModalCreate(false);
+    toast({
+      title: successMessage,
+    });
+  } catch (error) {
+    console.error(error);
+    toast({
+      title: "Error creating/updating Green House",
+    });
   }
+}
 
   return (
     <div>

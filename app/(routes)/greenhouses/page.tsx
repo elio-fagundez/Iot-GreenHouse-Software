@@ -9,9 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Trash, Edit } from 'lucide-react';
+import { Trash, Edit, CirclePlus } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast"
 import Image from 'next/image';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FormCreateCustomer } from './components/FormCreateCustomer';
+import { Button } from '@/components/ui/button';
 
 export default function Page() {
   interface Greenhouse {
@@ -44,6 +47,7 @@ export default function Page() {
       });
   }, []);
 
+  const [openModalEdit, setOpenModalEdit] = useState(false);
 
   const deleteGreenhouse = async (id: number) => {
     try {
@@ -70,9 +74,14 @@ export default function Page() {
     }
   };
 
+  const handleEditGreenhouse = (greenhouse) => {
+    setSelectedGreenhouse(greenhouse);
+    setOpenModalEdit(true);
+  };
+
 
   return (
-    <div className='bg-white rounded p-4 '>
+    <>
       <HeaderCompanies />
 
       <Table>
@@ -103,11 +112,19 @@ export default function Page() {
               <TableCell>{greenhouse.cif}</TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
-                  <button
-                    className="text-blue-700 hover:text-blue-900"
-                  >
-                    <Edit />
-                  </button>
+
+                  <Dialog open={openModalEdit} onOpenChange={setOpenModalEdit}>
+                    <DialogTrigger asChild>
+                      <Button className="text-blue-700 hover:text-blue-900 bg-white hover:bg-gray-200" ><Edit /> </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Edit Green House</DialogTitle>
+                        <DialogDescription>Edit and configure your Green House</DialogDescription>
+                      </DialogHeader>
+                      <FormCreateCustomer greenhouseData={greenhouse.id} setOpenModalCreate={setOpenModalEdit} />
+                      </DialogContent>
+                  </Dialog>
                   <button
                     className="text-red-500 hover:text-red-700"
                     onClick={() => deleteGreenhouse(greenhouse.id)}
@@ -120,6 +137,8 @@ export default function Page() {
           ))}
         </TableBody>
       </Table>
-    </div>
+
+
+    </>
   );
 }
