@@ -3,19 +3,28 @@ import { TrendingUp, X } from "lucide-react";
 import {
     Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from "recharts";
-import { dataGraphics } from "./GraphicSuscribers.data";
 
-export function GraphicSuscribers() {
+interface GraphicSuscribersProps {
+    data: any[];
+    title: string;
+}
+
+export function GraphicSuscribers({ data, title }: GraphicSuscribersProps) {
+    const transformedData = data.map(item => ({
+        year: new Date(item.createdAt).getFullYear(),
+        newCustomers: item.value,
+        oldCustomers: item.value 
+    }));
+
+
     return (
         <div className="mt-2">
-            <p className="text-3xl mb-3">24.479</p>
+            <p className="text-3xl mb-3">{title}</p>
         
-            <div className="h-[350px]">
+            <div className="h-[350px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
-                        width={730}
-                        height={250}
-                        data={dataGraphics}
+                        data={transformedData}
                         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                     >
                         <defs>
@@ -32,10 +41,8 @@ export function GraphicSuscribers() {
                         <YAxis />
                         <Tooltip />
                         <Area type="monotone" dataKey="newCustomers" stroke="#887CFD" fillOpacity={1} fill="url(#colorUv)" />
-
                         <Area type="monotone" dataKey="oldCustomers" stroke="#82CA9D" fillOpacity={1} fill="url(#colorPv)" />
                     </AreaChart>
-
                 </ResponsiveContainer>
             </div>
         </div>
