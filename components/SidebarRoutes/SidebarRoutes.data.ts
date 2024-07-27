@@ -6,6 +6,7 @@ import {
     CircleHelpIcon,
     HousePlus
 } from 'lucide-react'
+import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan } from "lucide-react";
 
 export const dataGeneralSidebar = [
     {
@@ -23,14 +24,19 @@ export const dataGeneralSidebar = [
 
 export const dataToolsSidebar = [ 
     {
-        icon: CircleHelpIcon,
-        label: 'Faqs',
-        href: '/faqs'
+        icon: Thermometer,
+        label: 'Temperatures',
+        href: '/temperatures'
     },
     {
-        icon: BarChart4,
-        label: 'Analytics',
-        href: '/analytics'
+        icon: Droplet,
+        label: 'Humidities',
+        href: '/humidities'
+    },
+    {
+        icon: SunDim,
+        label: 'Brightnesses',
+        href: '/brightnesses'
     }
 ]
 

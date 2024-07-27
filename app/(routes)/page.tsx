@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import { CardSummary } from "./components/CardSummary";
 import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan } from "lucide-react";
-import SalesDistributors from "./components/SalesDistributors/SalesDistributors";
+import SalesDistributors from "./components/TemperatureGraphics/TemperatureGraphics";
 import { GreenHouseImage } from "./components/GreenHouseImage";
+import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
+import BrightnessGraphics from "./components/BrightnessGraphics/BrightnessGraphics";
+import SoilHumiditiesGraphics from "./components/SoilHumiditiesGraphics/SoilHumiditiesGraphics";
 
 export default function Home() {
   const [dataTemperature, setDataTemperature] = useState([]);
@@ -17,6 +20,10 @@ export default function Home() {
   const [dataPump1, setDataPump1] = useState([]);
   const [dataHeater1, setDataHeater1] = useState([]);
   const [allTemperatures, setDataAllTemperatures] = useState([]);
+  const [allHumidities, setDataAllHumidities] = useState([]);
+  const [allSoilHumidities, setDataAllSoilHumidities] = useState([]);
+  const [allBrightness, setDataAllBrightness] = useState([]);
+
 
   useEffect(() => {
     const fetchDataTemperature= async () => {
@@ -128,6 +135,38 @@ export default function Home() {
       }
     };
 
+    const fetchDataAllHumidities = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/humidities`);
+        const data = await response.json();
+        setDataAllHumidities(data);
+      } catch (error) {
+        console.error("Error fetching graphics data:", error);
+      }
+    };
+
+    const fetchDataAllBrightness = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/brightnesses`);
+        const data = await response.json();
+        setDataAllBrightness(data);
+      } catch (error) {
+        console.error("Error fetching graphics data:", error);
+      }
+    };
+
+    const fetchDataAllSoilHumidities = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities`);
+        const data = await response.json();
+        setDataAllSoilHumidities(data);
+      } catch (error) {
+        console.error("Error fetching graphics data:", error);
+      }
+    };
+
+    
+
 
     fetchDataTemperature();
     fetchDataHumidity();
@@ -142,6 +181,10 @@ export default function Home() {
     fetchDataHeater1();
 
     fetchDataAllTemperatures();
+    fetchDataAllHumidities();
+    fetchDataAllSoilHumidities();
+    fetchDataAllBrightness();
+
   }, []);
 
   const cardDataActuators = [
@@ -170,7 +213,6 @@ export default function Home() {
       tooltipText: "ON / OFF",
     },
   ];
-  console.log("dataTemperature", dataTemperature);
 
   return (
     <div>
@@ -270,18 +312,17 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-4 md:gap-x-2 mt-12">
         <div className="col-span-4 flex justify-center text-2xl">Flow Charts</div>
-        <div className="col-span-2 flexflex-col">
-        <SalesDistributors data={allTemperatures} title="Temperature" />
-
-        </div>
-        <div className="col-span-2 flex  flex-col">
+        <div className="col-span-2 flex flex-col">
         <SalesDistributors data={allTemperatures} title="Temperature" />
         </div>
         <div className="col-span-2 flex  flex-col">
-        <SalesDistributors data={allTemperatures} title="Temperature" />
+        <HumidityGraphics data={allHumidities} title="Humidity" />
         </div>
         <div className="col-span-2 flex  flex-col">
-        <SalesDistributors data={allTemperatures} title="Temperature" />
+        <BrightnessGraphics data={allBrightness} title="Brightness" />
+        </div>
+        <div className="col-span-2 flex  flex-col">
+        <SoilHumiditiesGraphics data={allSoilHumidities} title="Soil Humidities" />
         </div>
       </div>
     </div>

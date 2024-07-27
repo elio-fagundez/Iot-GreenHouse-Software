@@ -20,7 +20,7 @@ export function SidebarRoutes() {
 
 
                 <div className="p-2 md:p-6">
-                    <p>TOOLS</p>
+                    <p>SENSORS</p>
                     {dataToolsSidebar.map((item, index) => (
                         <SidebarItem key={index} item={item} />
                     ))}

@@ -74,15 +74,15 @@ export default function Page() {
     }
   };
 
-  const handleEditGreenhouse = (greenhouse) => {
-    setSelectedGreenhouse(greenhouse);
-    setOpenModalEdit(true);
-  };
+  // const handleEditGreenhouse = (greenhouse) => {
+  //   setSelectedGreenhouse(greenhouse);
+  //   setOpenModalEdit(true);
+  // };
 
 
   return (
     <>
-      <HeaderCompanies title="Greenhouses" />
+      <HeaderCompanies title="List of Brightnesses" />
 
       <Table>
         <TableHeader>

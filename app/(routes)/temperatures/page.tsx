@@ -74,19 +74,20 @@ export default function Page() {
     }
   };
 
-  const handleEditGreenhouse = (greenhouse) => {
-    setSelectedGreenhouse(greenhouse);
-    setOpenModalEdit(true);
-  };
+  // const handleEditGreenhouse = (greenhouse) => {
+  //   setSelectedGreenhouse(greenhouse);
+  //   setOpenModalEdit(true);
+  // };
 
 
   return (
     <>
-      <HeaderCompanies title="Greenhouses" />
+      <HeaderCompanies title="List of Temperatures" />
 
       <Table>
         <TableHeader>
           <TableRow>
+   
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Country</TableHead>
@@ -99,7 +100,7 @@ export default function Page() {
         <TableBody>
           {greenhouses.map(greenhouse => (
             <TableRow key={greenhouse.id}>
-           
+         
 
               <TableCell>{greenhouse.id}</TableCell>
               <TableCell className="font-medium">{greenhouse.name}</TableCell>

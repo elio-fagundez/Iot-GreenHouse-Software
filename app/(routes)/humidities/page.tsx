@@ -74,15 +74,15 @@ export default function Page() {
     }
   };
 
-  const handleEditGreenhouse = (greenhouse) => {
-    setSelectedGreenhouse(greenhouse);
-    setOpenModalEdit(true);
-  };
+  // const handleEditGreenhouse = (greenhouse) => {
+  //   setSelectedGreenhouse(greenhouse);
+  //   setOpenModalEdit(true);
+  // };
 
 
   return (
     <>
-      <HeaderCompanies title="Greenhouses" />
+      <HeaderCompanies title="List of Humidities" />
 
       <Table>
         <TableHeader>
@@ -99,7 +99,7 @@ export default function Page() {
         <TableBody>
           {greenhouses.map(greenhouse => (
             <TableRow key={greenhouse.id}>
-           
+          
 
               <TableCell>{greenhouse.id}</TableCell>
               <TableCell className="font-medium">{greenhouse.name}</TableCell>
