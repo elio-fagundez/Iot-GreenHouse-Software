@@ -32,7 +32,7 @@ export default function Page() {
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    fetch(`${apiUrl}/api/humidities/`)
+    fetch(`${apiUrl}/api/soilhumidities/`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -52,7 +52,7 @@ export default function Page() {
   const deleteGreenhouse = async (id: number) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${apiUrl}/api/greenhouses/${id}`, {
+      const response = await fetch(`${apiUrl}/api/temperatures/${id}`, {
         method: 'DELETE',
       });
 
@@ -125,10 +125,9 @@ export default function Page() {
   }, [greenhouses]);
 
 
-
   return (
     <>
-      <HeaderCompanies title="List of Humidities" />
+      <HeaderCompanies title="List of Soil Humidities" />
 
       <Table>
       <TableHeader>

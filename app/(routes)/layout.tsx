@@ -9,7 +9,7 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
             </div>
             <div className="w-full xl:ml-80">
                 <Navbar />
-                <div className="p-6 bg-[#eeeeee] dark:bg-secondary">
+                <div className="p-6 bg-[#fdfdfd] dark:bg-secondary/10">
                     {children}
                 </div>
             </div>

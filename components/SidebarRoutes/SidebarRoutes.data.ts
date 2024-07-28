@@ -37,6 +37,16 @@ export const dataToolsSidebar = [
         icon: SunDim,
         label: 'Brightnesses',
         href: '/brightnesses'
+    },
+    {
+        icon: Heater,
+        label: 'Soil Humidities',
+        href: '/soilhumidities'
+    },
+    {
+        icon: Fuel,
+        label: 'CO2',
+        href: '/co2'
     }
 ]
 

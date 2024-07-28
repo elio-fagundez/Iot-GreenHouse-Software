@@ -12,7 +12,7 @@ export function CardSummary(props: CardSummaryProps) {
     const displayValue = title === 'Temperature' ? `${total}°C / ${convertToFahrenheit(total as any)}°F` : total;
 
     return (
-        <div className='shadow-sm bg-[#3a414a] rounded-lg h-32 p-5 py-3 hover:shadow-lg transition text-white'>
+        <div className='shadow-sm bg-[#3a414a] rounded-lg h-32 p-5 py-3 hover:shadow-lg transition text-white cursor-pointer'>
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
                     {title}

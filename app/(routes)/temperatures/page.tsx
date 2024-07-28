@@ -32,7 +32,7 @@ export default function Page() {
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    fetch(`${apiUrl}/api/greenhouses/`)
+    fetch(`${apiUrl}/api/temperatures/`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -52,7 +52,7 @@ export default function Page() {
   const deleteGreenhouse = async (id: number) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${apiUrl}/api/greenhouses/${id}`, {
+      const response = await fetch(`${apiUrl}/api/temperatures/${id}`, {
         method: 'DELETE',
       });
 
@@ -80,34 +80,79 @@ export default function Page() {
   // };
 
 
+  const [greenhouseNames, setGreenhouseNames] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const fetchGreenhouseNames = async () => {
+      const names: { [key: string]: string } = {};
+      for (const greenhouse of greenhouses) {
+        console.log("greenhouse", greenhouse);
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+        try {
+          // Reemplaza esta URL con la URL de tu API o lógica para obtener el nombre del invernadero
+          const response = await fetch(`${apiUrl}/api/greenhouses/${greenhouse?.greenhouseId}`);
+          console.log("greenhouse response", response);
+
+          // Verifica si la respuesta es JSON
+          const contentType = response.headers.get("content-type");
+          if (response.status === 404) {
+            console.error(`Error 404: El invernadero con ID ${greenhouse?.greenhouseId} no fue encontrado.`);
+          } else if (contentType && contentType.includes("application/json")) {
+            const data: Greenhouse = await response.json();
+            console.log("greenhouse data", data);
+
+            names[greenhouse?.greenhouseId] = data.name;
+          } else {
+            const text = await response.text(); // Lee el contenido de la respuesta como texto
+            console.error('Error: La respuesta no es JSON', {
+              status: response.status,
+              statusText: response.statusText,
+              headers: response.headers,
+              body: text,
+            });
+          }
+
+          console.log("names", names);
+        } catch (error) {
+          console.error('Error fetching greenhouse name:', error);
+        }
+      }
+      setGreenhouseNames(names);
+    };
+
+    fetchGreenhouseNames();
+  }, [greenhouses]);
+
+
   return (
     <>
       <HeaderCompanies title="List of Temperatures" />
 
       <Table>
-        <TableHeader>
+      <TableHeader>
           <TableRow>
-   
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Website</TableHead>
-            <TableHead>CIF</TableHead>
+            <TableHead>Value</TableHead>
+            <TableHead>Created at</TableHead>
+
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {greenhouses.map(greenhouse => (
+        {greenhouses.map(greenhouse => (
             <TableRow key={greenhouse.id}>
-         
+
 
               <TableCell>{greenhouse.id}</TableCell>
-              <TableCell className="font-medium">{greenhouse.name}</TableCell>
-              <TableCell>{greenhouse.country}</TableCell>
-              <TableCell>{greenhouse.phone}</TableCell>
-              <TableCell>{greenhouse.website}</TableCell>
-              <TableCell>{greenhouse.cif}</TableCell>
+              <TableCell className="font-medium">{greenhouseNames[greenhouse.greenhouseId]}</TableCell>
+
+              <TableCell className="font-medium">{greenhouse?.value ? greenhouse?.value : '0'} °C</TableCell>
+              <TableCell className="font-medium">
+                {greenhouse?.createdAt ? new Date(greenhouse.createdAt).toLocaleDateString('en-US') : ''}
+              </TableCell>
+
               <TableCell>
                 <div className="flex items-center space-x-2">
 
@@ -121,7 +166,7 @@ export default function Page() {
                         <DialogDescription>Edit and configure your Green House</DialogDescription>
                       </DialogHeader>
                       <FormCreateCustomer greenhouseData={greenhouse.id} setOpenModalCreate={setOpenModalEdit} />
-                      </DialogContent>
+                    </DialogContent>
                   </Dialog>
                   <button
                     className="text-red-500 hover:text-red-700"

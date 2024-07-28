@@ -8,6 +8,7 @@ import { GreenHouseImage } from "./components/GreenHouseImage";
 import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
 import BrightnessGraphics from "./components/BrightnessGraphics/BrightnessGraphics";
 import SoilHumiditiesGraphics from "./components/SoilHumiditiesGraphics/SoilHumiditiesGraphics";
+import Link from "next/link";
 
 export default function Home() {
   const [dataTemperature, setDataTemperature] = useState([]);
@@ -26,7 +27,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    const fetchDataTemperature= async () => {
+    const fetchDataTemperature = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/temperatures`);
         const data = await response.json();
@@ -37,7 +38,7 @@ export default function Home() {
       }
     };
 
-    const fetchDataHumidity= async () => {
+    const fetchDataHumidity = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/humidities`);
         const data = await response.json();
@@ -48,7 +49,7 @@ export default function Home() {
       }
     };
 
-    const fetchDataBrightness= async () => {
+    const fetchDataBrightness = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/brightnesses`);
         const data = await response.json();
@@ -59,7 +60,7 @@ export default function Home() {
       }
     };
 
-    const fetchDataSoilhumidities= async () => {
+    const fetchDataSoilhumidities = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities`);
         const data = await response.json();
@@ -70,7 +71,7 @@ export default function Home() {
       }
     };
 
-    const fetchDataCo2= async () => {
+    const fetchDataCo2 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/co2`);
         const data = await response.json();
@@ -81,7 +82,7 @@ export default function Home() {
       }
     };
 
-    const fetchDataFan1= async () => {
+    const fetchDataFan1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fan1`);
         const data = await response.json();
@@ -102,7 +103,7 @@ export default function Home() {
         console.error("Error fetching card data sensors:", error);
       }
     };
-    
+
     const fetchDataPump1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pump1`);
@@ -113,7 +114,7 @@ export default function Home() {
         console.error("Error fetching card data sensors:", error);
       }
     };
-    
+
     const fetchDataHeater1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/heater1`);
@@ -165,7 +166,7 @@ export default function Home() {
       }
     };
 
-    
+
 
 
     fetchDataTemperature();
@@ -220,48 +221,63 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-24">
           <div className="col-span-2 flex justify-center text-2xl">Sensors</div>
           {dataTemperature && (
-            <CardSummary
-              icon={Fan}
-              total={(dataTemperature as any).value}
-              title="Temperature"
-              tooltipText="Show Temperature"
-            />
+            <Link href="/temperatures">
+
+              <CardSummary
+                icon={Fan}
+                total={(dataTemperature as any).value}
+                title="Temperature"
+                tooltipText="Show Temperature"
+              />
+
+            </Link>
           )}
 
           {dataHumidity && (
-            <CardSummary
-              icon={Droplet}
-              total={(dataHumidity as any).value}
-              title="Humidity"
-              tooltipText="Show Humidity"
-            />
+            <Link href="/humidities">
+
+              <CardSummary
+                icon={Droplet}
+                total={(dataHumidity as any).value}
+                title="Humidity"
+                tooltipText="Show Humidity"
+              />
+            </Link>
           )}
 
           {dataBrightness && (
-            <CardSummary
-              icon={SunDim}
-              total={(dataBrightness as any).value}
-              title="Brightness"
-              tooltipText="Show Brightness"
-            />
+            <Link href="/brightnesses">
+
+              <CardSummary
+                icon={SunDim}
+                total={(dataBrightness as any).value}
+                title="Brightness"
+                tooltipText="Show Brightness"
+              />
+            </Link>
           )}
 
           {dataSoilHumidities && (
-            <CardSummary
-              icon={Sprout}
-              total={(dataSoilHumidities as any).value}
-              title="Soil Humidity"
-              tooltipText="Show Soil Humidity"
-            />
+            <Link href="/soilhumidities">
+              <CardSummary
+                icon={Sprout}
+                total={(dataSoilHumidities as any).value}
+                title="Soil Humidity"
+                tooltipText="Show Soil Humidity"
+              />
+            </Link>
           )}
 
           {dataCo2 && (
-            <CardSummary
-              icon={Fuel}
-              total={(dataCo2 as any).value}
-              title="CO2"
-              tooltipText="Show CO2"
-            />
+            <Link href="/co2">
+
+              <CardSummary
+                icon={Fuel}
+                total={(dataCo2 as any).value}
+                title="CO2"
+                tooltipText="Show CO2"
+              />
+            </Link>
           )}
         </div>
 
@@ -313,16 +329,16 @@ export default function Home() {
       <div className="grid grid-cols-1 xl:grid-cols-4 md:gap-x-2 mt-12">
         <div className="col-span-4 flex justify-center text-2xl">Flow Charts</div>
         <div className="col-span-2 flex flex-col">
-        <SalesDistributors data={allTemperatures} title="Temperature" />
+          <SalesDistributors data={allTemperatures} title="Temperature" />
         </div>
         <div className="col-span-2 flex  flex-col">
-        <HumidityGraphics data={allHumidities} title="Humidity" />
+          <HumidityGraphics data={allHumidities} title="Humidity" />
         </div>
         <div className="col-span-2 flex  flex-col">
-        <BrightnessGraphics data={allBrightness} title="Brightness" />
+          <BrightnessGraphics data={allBrightness} title="Brightness" />
         </div>
         <div className="col-span-2 flex  flex-col">
-        <SoilHumiditiesGraphics data={allSoilHumidities} title="Soil Humidities" />
+          <SoilHumiditiesGraphics data={allSoilHumidities} title="Soil Humidities" />
         </div>
       </div>
     </div>
