@@ -13,14 +13,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { UploadButton } from "@uploadthing/react"
+
 import { toast } from "@/components/ui/use-toast"
 
 interface FormCreateCustomerProps {
@@ -29,208 +22,100 @@ interface FormCreateCustomerProps {
 }
 
 const formSchema = z.object({
-  name: z.string().min(2),
-  country: z.string().min(2),
-  website: z.string().min(2),
-  phone: z.string().min(6),
-  cif: z.string().min(6),
-  profileImage: z.string(),
+  id: z.string().min(1),
+  value: z.string().min(1),
+  createdAt: z.string().min(2),
+  updatedAt: z.string().min(2),
+  greenhouseId: z.string().min(1),
 })
 
 
 export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenModalCreate, greenhouseData }) => {
-  const [photoUploaded, setPhotoUploaded] = useState(false);
   console.log("greenhouseData", greenhouseData);
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: greenhouseData?.name || "",
-      country: greenhouseData?.country || "",
-      website: greenhouseData?.website || "",
-      phone: greenhouseData?.phone || "",
-      cif: greenhouseData?.cif || "",
-      profileImage: greenhouseData?.profileImage || "",
+      id: greenhouseData?.id || "",
+      value: greenhouseData?.value || "",
+      createdAt: greenhouseData?.createdAt || "",
+      updatedAt: greenhouseData?.updatedAt || "",
+      greenhouseId: greenhouseData?.greenhouseId || "",
     },
   })
 
-  const { isValid } = form.formState
-const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    let url = `${apiUrl}/api/greenhouses/`;
-    let method = 'POST';
-    let successMessage = "Green House created successfully";
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      let url = `${apiUrl}/api/humidities/`;
+      let method = 'POST';
+      let successMessage = "Temperature created successfully";
 
-    // Si greenhouseData existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
-    if (greenhouseData && greenhouseData.id) {
-      url = `${apiUrl}/api/greenhouses/${greenhouseData.id}`;
-      method = 'PUT';
-      successMessage = "Green House updated successfully";
+      // Si greenhouseData existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
+      if (greenhouseData && greenhouseData.id) {
+        url = `${apiUrl}/api/humidities/${greenhouseData.id}`;
+        method = 'PUT';
+        successMessage = "Temperature updated successfully";
+      }
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      setOpenModalCreate(false);
+      toast({
+        title: successMessage,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error creating/updating Green House",
+      });
     }
-
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (!response.ok) {
-      throw new Error('Something went wrong');
-    }
-    setOpenModalCreate(false);
-    toast({
-      title: successMessage,
-    });
-  } catch (error) {
-    console.error(error);
-    toast({
-      title: "Error creating/updating Green House",
-    });
   }
-}
+  const [inputValue, setInputValue] = useState('');
+
+
+
 
   return (
     <div>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid grid-cols-2 gap-2">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
+          <div className="grid grid-cols-1 gap-2">
             <FormField
               control={form.control}
-              name="name"
+              name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Value</FormLabel>
                   <FormControl>
-                    <Input placeholder="name" {...field} />
+                    <Input
+                      placeholder="Value"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setInputValue(e.target.value);
+                      }}
+                    />
                   </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a country" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="united-kingdom">
-                        United Kingdom
-                      </SelectItem>
-                      <SelectItem value="united-states">
-                        United States
-                      </SelectItem>
-                    </SelectContent>
-
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Website</FormLabel>
-                  <FormControl>
-                    <Input placeholder="www.greenhouse.com" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="+1 123456789" type="number" {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-          </div>
-          <div className="col-span-2 gap-y-4">
-            <FormField
-              control={form.control}
-              name="cif"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Code" type="text" {...field} />
-                  </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className="col-span-2 py-2">
+          <div className="py-4">
+            <Button type="submit" disabled={!inputValue}>Submit</Button>
 
-            <FormField
-              control={form.control}
-              name="profileImage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    {photoUploaded ? (<p>Image Uploaded!!</p>) : (
-                      <UploadButton
-                        className="bg-slate-600/20 text-slate-800 rounded-lg 
-                        outline-dotted outline-3"
-                        {...field}
-                        endpoint="profileImage"
-                        onClientUploadComplete={(res: { url: string }[]) => {
-                          form.setValue("profileImage", res?.[0].url);
-                          toast({
-                            title: "Photo Uploaded",
-                          });
-                          setPhotoUploaded(true);
-                        }}
-                        onUploadError={(error: Error) => {
-                          console.error(error);
-                          toast({
-                            title: "Error uploading image",
-                          });
-
-
-                        }}
-                      />
-                    )}
-
-
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
-
-          <Button type="submit" disabled={!isValid}>Submit</Button>
         </form>
       </Form>
     </div>
