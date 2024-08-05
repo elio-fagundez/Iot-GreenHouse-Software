@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CardSummary } from "./components/CardSummary";
-import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan } from "lucide-react";
+import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan, Droplets } from "lucide-react";
 import SalesDistributors from "./components/TemperatureGraphics/TemperatureGraphics";
 import { GreenHouseImage } from "./components/GreenHouseImage";
 import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
@@ -279,49 +279,74 @@ export default function Home() {
               />
             </Link>
           )}
+
+
+          {dataCo2 && (
+            <Link href="/ph">
+
+              <CardSummary
+                icon={Droplets}
+                total={(dataCo2 as any).value}
+                title="PH"
+                tooltipText="Show PH"
+              />
+            </Link>
+          )}
         </div>
 
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-24">
           <div className="col-span-2 flex justify-center text-2xl">Actuators</div>
           {dataFan1 && (
-            <CardSummary
-              icon={Fan}
-              total={(dataFan1 as any).value}
-              title="Fan 1"
-              tooltipText="Show Fan 1"
-            />
+            <Link href="/fan1">
+              <CardSummary
+                icon={Fan}
+                total={(dataFan1 as any).value}
+                title="Fan 1"
+                tooltipText="Show Fan 1"
+              />
+            </Link>
           )}
 
           {dataLamp1 && (
-            <CardSummary
-              icon={Lightbulb}
-              total={(dataLamp1 as any).value}
-              title="Lamp 1"
-              tooltipText="Show Lamp 1"
-            />
+            <Link href="/lamp1">
+
+              <CardSummary
+                icon={Lightbulb}
+                total={(dataLamp1 as any).value}
+                title="Lamp 1"
+                tooltipText="Show Lamp 1"
+              />
+            </Link>
           )}
 
           {dataPump1 && (
-            <CardSummary
-              icon={Zap}
-              total={(dataPump1 as any).value}
-              title="Pump 1"
-              tooltipText="Show Pump 1"
-            />
+            <Link href="/pump1">
+
+              <CardSummary
+                icon={Zap}
+                total={(dataPump1 as any).value}
+                title="Pump 1"
+                tooltipText="Show Pump 1"
+              />
+            </Link>
           )}
 
           {dataHeater1 && (
-            <CardSummary
-              icon={Heater}
-              total={(dataHeater1 as any).value}
-              title="Heater 1"
-              tooltipText="Show Heater 1"
-            />
+            <Link href="/heater1">
+
+              <CardSummary
+                icon={Heater}
+                total={(dataHeater1 as any).value}
+                title="Heater 1"
+                tooltipText="Show Heater 1"
+              />
+            </Link>
+
           )}
         </div>
 
-        <div className="col-span-1  max-h-80">
+        <div className="col-span-1  max-h-80 lg:flex">
           <div className="col-span-2 flex justify-center text-2xl">GPS Information</div>
           <GreenHouseImage />
         </div>

@@ -1,14 +1,24 @@
 "use client"
 
 import SidebarItem from "../SidebarItem/SidebarItem"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { dataGeneralSidebar, dataSupportSidebar, dataToolsSidebar } from "./SidebarRoutes.data"
+import { dataGeneralSidebar, dataSupportSidebar, dataToolsSidebar, dataActuatorSidebar } from "./SidebarRoutes.data"
+import { useState } from "react"
 
 export function SidebarRoutes() {
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenActuator, setIsOpenActuator] = useState(false);
+    const toggleOpen = () => {
+        setIsOpen(!isOpen);
+    };
+    const toggleOpenActuator = () => {
+        setIsOpenActuator(!isOpenActuator);
+    }
+
     return (
         <div className="flex flex-col justify-between h-full">
-            <div>
+            <div className="overflow-y-auto">
                 <div className="p-2 md:p-6">
                     <p>GENERAL</p>
                     {dataGeneralSidebar.map((item, index) => (
@@ -17,13 +27,33 @@ export function SidebarRoutes() {
                 </div>
                 <Separator />
 
-
+                <div className="p-2 md:p-6">
+                    <button onClick={toggleOpen} className="flex justify-between items-center w-full text-left">
+                        <p>SENSORS</p>
+                        <span>{isOpen ? '-' : '+'}</span>
+                    </button>
+                    {isOpen && (
+                        <div>
+                            {dataToolsSidebar.map((item, index) => (
+                                <SidebarItem key={index} item={item} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <Separator />
 
                 <div className="p-2 md:p-6">
-                    <p>SENSORS</p>
-                    {dataToolsSidebar.map((item, index) => (
-                        <SidebarItem key={index} item={item} />
-                    ))}
+                    <button onClick={toggleOpenActuator} className="flex justify-between items-center w-full text-left">
+                        <p>ACTUATORS</p>
+                        <span>{isOpenActuator ? '-' : '+'}</span>
+                    </button>
+                    {isOpenActuator && (
+                        <div>
+                            {dataActuatorSidebar.map((item, index) => (
+                                <SidebarItem key={index} item={item} />
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <Separator />
 
@@ -33,20 +63,8 @@ export function SidebarRoutes() {
                         <SidebarItem key={index} item={item} />
                     ))}
                 </div>
-
             </div>
-            <div>
-                <div className="text-center p-6">
-                    <Button variant="outline" className="w-full">Upgrade Plan</Button>
-                </div>
-
-                <Separator />
-
-                <footer className="mt-3 p-3 text-center">
-                    2024. GreenHouse IoT All rights reserved
-                </footer>
-
-            </div>
+          
         </div>
     )
 }
