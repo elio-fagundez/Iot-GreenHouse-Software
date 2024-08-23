@@ -4,7 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster";
-
+import {  ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const noto = Noto_Sans_Display({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
   <ClerkProvider>
+
     <html lang="en">
       <body className={noto.className}>
         <ThemeProvider
@@ -27,6 +29,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+                        <ToastContainer />
+
           {children}
           <Toaster />
         </ThemeProvider>

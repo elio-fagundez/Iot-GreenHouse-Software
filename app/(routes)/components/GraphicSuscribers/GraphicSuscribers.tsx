@@ -13,30 +13,27 @@ interface GraphicSuscribersProps {
 export function GraphicSuscribers({ data, title, fill }: GraphicSuscribersProps) {
     const transformedData = data.map(item => {
         const currentDate = new Date(item.createdAt);
-        const previousMonthDate = new Date(currentDate);
-        previousMonthDate.setMonth(currentDate.getMonth() - 1);
+        const previousHourDate = new Date(currentDate);
+        previousHourDate.setHours(currentDate.getHours() - 1);
 
-        const previousMonthData = data.find(d => {
+        const previousHourData = data.find(d => {
             const dDate = new Date(d.createdAt);
-            return dDate.getFullYear() === previousMonthDate.getFullYear() &&
-                   dDate.getMonth() === previousMonthDate.getMonth() &&
-                   dDate.getDate() === previousMonthDate.getDate();
+            return dDate.getFullYear() === previousHourDate.getFullYear() &&
+                   dDate.getMonth() === previousHourDate.getMonth() &&
+                   dDate.getDate() === previousHourDate.getDate() &&
+                   dDate.getHours() === previousHourDate.getHours();
         });
 
         return {
             year: currentDate.getFullYear(),
             month: currentDate.getMonth() + 1, 
             day: currentDate.getDate(),
+            hour: currentDate.getHours(),
             Temperature: item.value,
-            "Previous Temperature": previousMonthData ? previousMonthData.value : 0,
-            date: currentDate.getDate(),
+            "Previous Temperature": previousHourData ? previousHourData.value : 0,
+            time: `${currentDate.getHours()}:00`,
         };
     });
-
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
 
     return (
         <div className="mt-2">
@@ -61,8 +58,7 @@ export function GraphicSuscribers({ data, title, fill }: GraphicSuscribersProps)
                                 <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <XAxis dataKey="month"     tickFormatter={(month) => monthNames[month - 1]} 
- />
+                        <XAxis dataKey="time" />
                         <YAxis />
                         <Tooltip />
                         

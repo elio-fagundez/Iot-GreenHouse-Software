@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { CardSummary } from "./components/CardSummary";
 import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan, Droplets } from "lucide-react";
 import SalesDistributors from "./components/TemperatureGraphics/TemperatureGraphics";
@@ -9,6 +9,8 @@ import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
 import BrightnessGraphics from "./components/BrightnessGraphics/BrightnessGraphics";
 import SoilHumiditiesGraphics from "./components/SoilHumiditiesGraphics/SoilHumiditiesGraphics";
 import Link from "next/link";
+import { toast} from 'react-toastify';
+
 
 export default function Home() {
   const [dataTemperature, setDataTemperature] = useState([]);
@@ -16,6 +18,7 @@ export default function Home() {
   const [dataBrightness, setDataBrightness] = useState([]);
   const [dataSoilHumidities, setDataSoilHumidities] = useState([]);
   const [dataCo2, setDataCo2] = useState([]);
+  const [dataPh, setDataPh] = useState([]);
   const [dataFan1, setDataFan1] = useState([]);
   const [dataLamp1, setDataLamp1] = useState([]);
   const [dataPump1, setDataPump1] = useState([]);
@@ -25,195 +28,206 @@ export default function Home() {
   const [allSoilHumidities, setDataAllSoilHumidities] = useState([]);
   const [allBrightness, setDataAllBrightness] = useState([]);
 
-
   useEffect(() => {
     const fetchDataTemperature = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/temperatures`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataTemperature(mostRecentData);
+
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching temperature data");
       }
     };
 
     const fetchDataHumidity = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/humidities`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataHumidity(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching humidity data");
       }
     };
 
     const fetchDataBrightness = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/brightnesses`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/luminosity`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataBrightness(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching luminosity data");
+
       }
     };
 
     const fetchDataSoilhumidities = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataSoilHumidities(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching soil humidity data");
       }
     };
 
     const fetchDataCo2 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/co2`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataCo2(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching CO2 data");
+      }
+    };
+
+    
+    const fetchDataPh= async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ph`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
+        setDataPh(mostRecentData);
+      } catch (error) {
+        console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching PH data");
       }
     };
 
     const fetchDataFan1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/fan1`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataFan1(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching fan data");
       }
     };
 
     const fetchDataLamp1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/lamp1`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataLamp1(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching lamp data");
       }
     };
 
     const fetchDataPump1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pump1`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataPump1(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching pump data");
       }
     };
 
     const fetchDataHeater1 = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/heater1`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const mostRecentData = data.reduce((max: { id: number; }, item: { id: number; }) => (item.id > max.id ? item : max), data[0]);
         setDataHeater1(mostRecentData);
       } catch (error) {
         console.error("Error fetching card data sensors:", error);
+        toast.error("Error fetching heater data");
       }
     };
 
     const fetchDataAllTemperatures = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/temperatures`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setDataAllTemperatures(data);
       } catch (error) {
         console.error("Error fetching graphics data:", error);
+        toast.error("Error fetching all temperatures data");
       }
     };
 
     const fetchDataAllHumidities = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/humidities`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setDataAllHumidities(data);
       } catch (error) {
         console.error("Error fetching graphics data:", error);
+        toast.error("Error fetching all humidities data");
       }
     };
 
     const fetchDataAllBrightness = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/brightnesses`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/luminosity`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setDataAllBrightness(data);
       } catch (error) {
         console.error("Error fetching graphics data:", error);
+        toast.error("Error fetching all brightness data");
       }
     };
 
     const fetchDataAllSoilHumidities = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities`);
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setDataAllSoilHumidities(data);
       } catch (error) {
         console.error("Error fetching graphics data:", error);
+        toast.error("Error fetching all soil humidities data");
       }
     };
-
-
-
 
     fetchDataTemperature();
     fetchDataHumidity();
     fetchDataBrightness();
     fetchDataSoilhumidities();
     fetchDataCo2();
-
-
+    fetchDataPh();
     fetchDataFan1();
     fetchDataLamp1();
     fetchDataPump1();
     fetchDataHeater1();
-
     fetchDataAllTemperatures();
     fetchDataAllHumidities();
     fetchDataAllSoilHumidities();
     fetchDataAllBrightness();
+  }, [[dataTemperature, dataHumidity, dataBrightness, dataSoilHumidities, dataCo2, dataFan1, dataLamp1, dataPump1, dataHeater1, allTemperatures, allHumidities, allSoilHumidities, allBrightness]]);
 
-  }, []);
+ 
 
-  const cardDataActuators = [
-    {
-      icon: Fan,
-      total: "80 RPM",
-      title: "FAN 1",
-      tooltipText: "Tooltip 1",
-    },
-    {
-      icon: Lightbulb,
-      total: "ON / OFF",
-      title: "LAMP 1",
-      tooltipText: "ON / OFF",
-    },
-    {
-      icon: Zap,
-      total: "ON / OFF",
-      title: "PUMP 1",
-      tooltipText: "Tooltip 2",
-    },
-    {
-      icon: Heater,
-      total: "ON / OFF",
-      title: "HEATER 1",
-      tooltipText: "ON / OFF",
-    },
-  ];
 
   return (
     <div>
@@ -251,8 +265,8 @@ export default function Home() {
               <CardSummary
                 icon={SunDim}
                 total={(dataBrightness as any).value}
-                title="Brightness"
-                tooltipText="Show Brightness"
+                title="Luminosity"
+                tooltipText="Show Luminosity"
               />
             </Link>
           )}
@@ -280,13 +294,11 @@ export default function Home() {
             </Link>
           )}
 
-
-          {dataCo2 && (
+          {dataPh && (
             <Link href="/ph">
-
               <CardSummary
                 icon={Droplets}
-                total={(dataCo2 as any).value}
+                total={(dataPh as any).value}
                 title="PH"
                 tooltipText="Show PH"
               />
@@ -360,10 +372,11 @@ export default function Home() {
           <HumidityGraphics data={allHumidities} title="Humidity" />
         </div>
         <div className="col-span-2 flex  flex-col">
-          <BrightnessGraphics data={allBrightness} title="Brightness" />
+          <HumidityGraphics data={allBrightness} title="Luminosity" />
+
         </div>
-        <div className="col-span-2 flex  flex-col">
-          <SoilHumiditiesGraphics data={allSoilHumidities} title="Soil Humidities" />
+        <div className="col-span-2 flex  flex-col">          
+          <HumidityGraphics data={allSoilHumidities} title="Soil Humidities" />
         </div>
       </div>
     </div>

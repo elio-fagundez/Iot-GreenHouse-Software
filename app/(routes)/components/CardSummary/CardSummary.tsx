@@ -9,10 +9,20 @@ export function CardSummary(props: CardSummaryProps) {
 
     const convertToFahrenheit = (celsius: number) => (celsius * 9 / 5) + 32
 
-    const displayValue = title === 'Temperature' ? `${total}°C / ${convertToFahrenheit(total as any)}°F` : total;
+    const displayValue = title === 'Temperature'
+        ? `${total?.toFixed(2)}°C / ${convertToFahrenheit(total as any)?.toFixed(2)}°F`
+        : total?.toFixed(2);
 
     return (
-        <div className='shadow-sm bg-[#3a414a] rounded-lg h-32 p-5 py-3 hover:shadow-lg transition text-white cursor-pointer'>
+        <div
+        className={`shadow-sm rounded-lg h-32 p-5 py-3 hover:shadow-lg transition text-white cursor-pointer ${
+            title === 'Temperature' 
+              ? (total > 25 ? 'bg-red-500' : 'bg-green-500') 
+              : title === 'Luminosity' 
+              ? (total > 1000 ? 'bg-yellow-600' : total <= 25 ? 'bg-black' : 'bg-blue-900') 
+              : 'bg-[#3a414a]'
+          }`}
+        >
             <div className="flex justify-between">
                 <div className="flex gap-2 items-center">
                     {title}
@@ -28,7 +38,7 @@ export function CardSummary(props: CardSummaryProps) {
                         </span>
                     ) : displayValue}
                     {title === 'Humidity' && <span className="text-2xl pl-2">%</span>}
-                    {title === 'Brightness' && <span className="text-2xl pl-2">Lux</span>}
+                    {title === 'Luminosity' && <span className="text-2xl pl-2">Lux</span>}
                     {title === 'Soil Humidity' && <span className="text-2xl pl-2">%</span>}
                     {title === 'CO2' && <span className="text-2xl pl-2">PPM</span>}
                     {title === 'Fan 1' && <span className="text-2xl pl-2">RPM</span>}

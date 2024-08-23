@@ -1,8 +1,9 @@
 'use client'
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
 interface GraphicLineProps {
     data: any[];
@@ -14,44 +15,40 @@ interface GraphicLineProps {
 export function GraphicLine({ data, title, fill, label }: GraphicLineProps) {
     const transformedData = data.map(item => {
         const currentDate = new Date(item.createdAt);
-        const previousMonthDate = new Date(currentDate);
-        previousMonthDate.setMonth(currentDate.getMonth() - 1);
+        const previousDayDate = new Date(currentDate);
+        previousDayDate.setDate(currentDate.getDate() - 1);
 
-        const previousMonthData = data.find(d => {
+        const previousDayData = data.find(d => {
             const dDate = new Date(d.createdAt);
-            return dDate.getFullYear() === previousMonthDate.getFullYear() &&
-                   dDate.getMonth() === previousMonthDate.getMonth() &&
-                   dDate.getDate() === previousMonthDate.getDate();
+            return dDate.getFullYear() === previousDayDate.getFullYear() &&
+                   dDate.getMonth() === previousDayDate.getMonth() &&
+                   dDate.getDate() === previousDayDate.getDate() &&
+                   dDate.getHours() === previousDayDate.getHours();
         });
 
         return {
             year: currentDate.getFullYear(),
             month: currentDate.getMonth() + 1, 
             day: currentDate.getDate(),
-            "This Month": item.value,
-            "Previous Month": previousMonthData ? previousMonthData.value : 0,
-            date: currentDate.getDate(),
+            hour: currentDate.getHours(),
+            "This Hour": item.value,
+            "Previous Hour": previousDayData ? previousDayData.value : 0,
         };
     });
 
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
     const chartData = {
-        labels: transformedData.map(d => `${d.day} ${monthNames[d.month - 1]}`),
+        labels: transformedData.map(d => `${d.hour}:00`),
         datasets: [
             {
                 label: label,
-                data: transformedData.map(d => d["This Month"]),
+                data: transformedData.map(d => d["This Hour"]),
                 borderColor: '#98bb12',
                 backgroundColor: fill ? fill : 'rgba(152, 187, 18, 0.5)',
                 fill: true,
             },
             {
                 label: 'Previous ' + label,
-                data: transformedData.map(d => d["Previous Month"]),
+                data: transformedData.map(d => d["Previous Hour"]),
                 borderColor: '#82CA9D',
                 backgroundColor: 'rgba(130, 202, 157, 0.5)',
                 fill: true,
@@ -70,6 +67,14 @@ export function GraphicLine({ data, title, fill, label }: GraphicLineProps) {
                 text: title,
             },
         },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'hour'
+                }
+            }
+        }
     };
 
     return (
