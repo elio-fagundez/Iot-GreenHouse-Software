@@ -9,11 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trash, Edit } from 'lucide-react';
+import { Trash, Edit, FileText } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { FormCreateCustomer } from './components/FormCreateCustomer';
 import { Button } from '@/components/ui/button';
+import jsPDF from 'jspdf'; // Importa jsPDF
+import 'jspdf-autotable'; // Importa el plugin autotable
 
 interface Greenhouse {
   country: string;
@@ -146,18 +148,42 @@ export default function Page() {
     console.log("Search term:", term);
   };
 
-
   const filteredItems = sortedGreenhouses.filter(greenhouse =>
     greenhouseNames[greenhouse.greenhouseId]?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     greenhouse.greenhouseId.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
     (typeof greenhouse.value === 'number' && greenhouse.value.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
 
+    // Agrega el título
+    doc.text('Humidity Report', 14, 20);
 
+    // Datos de la tabla
+    const data = filteredItems.map((greenhouse) => [
+      greenhouse.id,
+      greenhouseNames[greenhouse.greenhouseId],
+      greenhouse.value ? `${greenhouse.value} ` : '0 ',
+      greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleDateString('en-US') : '',
+    ]);
+
+    // Genera la tabla en el PDF
+    doc.autoTable({
+      startY: 30, // Ajusta la posición de inicio de la tabla para que no se superponga con el título
+      head: [['ID', 'Name', 'Value', 'Created at']],
+      body: data,
+    });
+
+    // Guarda el PDF
+    doc.save('humidity-report.pdf');
+  };
 
   return (
     <>
+      <div className="flex items-center justify-end gap-x-4 mb-4">
+        <Button onClick={handleDownloadPDF} className='ml-4'><FileText strokeWidth={2} className='w-3 h-3 mr-2' /> Download Report</Button>
+      </div>
       <HeaderCompanies title="Humidities" onSearch={handleSearch} />
 
       <Table>
@@ -186,8 +212,8 @@ export default function Page() {
           {filteredItems.map((greenhouse, index) => (
             <TableRow key={greenhouse.id}>
               <TableCell>{greenhouse.id}</TableCell>
-              <TableCell className="font-medium">{greenhouseNames[greenhouse.greenhouseId]}</TableCell>
-              <TableCell className="font-medium">{greenhouse.value ? greenhouse.value : '0'} °C</TableCell>
+              <TableCell className="my-4 bg-green-300 hover:bg-green-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">{greenhouseNames[greenhouse.greenhouseId]}</TableCell>
+              <TableCell className="font-medium">{greenhouse.value ? greenhouse.value : '0'}</TableCell>
               <TableCell className="font-medium">
                 {greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleDateString('en-US') : ''}
               </TableCell>

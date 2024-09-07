@@ -1,5 +1,4 @@
 'use client'
-import { TrendingUp, X } from "lucide-react";
 import {
     Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from "recharts";
@@ -11,7 +10,7 @@ interface GraphicSuscribersProps {
 }
 
 export function GraphicSuscribers({ data, title, fill }: GraphicSuscribersProps) {
-    const transformedData = data.map(item => {
+    const transformedData = data?.map(item => {
         const currentDate = new Date(item.createdAt);
         const previousHourDate = new Date(currentDate);
         previousHourDate.setHours(currentDate.getHours() - 1);
