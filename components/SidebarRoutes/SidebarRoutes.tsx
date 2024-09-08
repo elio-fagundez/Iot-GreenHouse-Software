@@ -32,13 +32,12 @@ export function SidebarRoutes() {
                         <p>SENSORS</p>
                         <span>{isOpen ? '-' : '+'}</span>
                     </button>
-                    {isOpen && (
                         <div>
                             {dataToolsSidebar.map((item, index) => (
                                 <SidebarItem key={index} item={item} />
                             ))}
                         </div>
-                    )}
+                 
                 </div>
                 <Separator />
 

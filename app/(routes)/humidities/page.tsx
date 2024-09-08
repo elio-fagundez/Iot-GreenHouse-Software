@@ -1,21 +1,13 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { HeaderCompanies } from './components/HeaderCompanies';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Trash, Edit, FileText } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FormCreateCustomer } from './components/FormCreateCustomer';
-import { Button } from '@/components/ui/button';
 import jsPDF from 'jspdf'; // Importa jsPDF
 import 'jspdf-autotable'; // Importa el plugin autotable
+import Paginate from '@/components/Pagination/Paginate';
+import GreenhouseTable from '@/components/Tables/GreenHouseTable';
+import { HeaderCompanies } from '@/components/HeaderTable/HeaderCompanies';
+import { FormCreateCustomer } from '@/components/FormCreateCustomer';
+import { handleDownloadPDF } from '@/utils/pdfUtils';
 
 interface Greenhouse {
   country: string;
@@ -39,6 +31,8 @@ export default function Page() {
   const [greenhouseNames, setGreenhouseNames] = useState<{ [key: string]: string }>({});
   const [order, setOrder] = useState<{ column: keyof Greenhouse | 'name', order: Order }>({ column: 'id', order: 'asc' });
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -138,14 +132,9 @@ export default function Page() {
     }
   });
 
-  const SortArrow = ({ order, active }: { order: 'asc' | 'desc'; active: boolean }) => {
-    const style = active ? { fontWeight: 'bold' } : { color: '#ccc' };
-    return order === 'asc' ? <span style={style}>↑</span> : <span style={style}>↓</span>;
-  };
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    console.log("Search term:", term);
   };
 
   const filteredItems = sortedGreenhouses.filter(greenhouse =>
@@ -154,97 +143,39 @@ export default function Page() {
     (typeof greenhouse.value === 'number' && greenhouse.value.toString().toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
 
-    // Agrega el título
-    doc.text('Humidity Report', 14, 20);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Datos de la tabla
-    const data = filteredItems.map((greenhouse) => [
-      greenhouse.id,
-      greenhouseNames[greenhouse.greenhouseId],
-      greenhouse.value ? `${greenhouse.value} ` : '0 ',
-      greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleDateString('en-US') : '',
-    ]);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-    // Genera la tabla en el PDF
-    doc.autoTable({
-      startY: 30, // Ajusta la posición de inicio de la tabla para que no se superponga con el título
-      head: [['ID', 'Name', 'Value', 'Created at']],
-      body: data,
-    });
 
-    // Guarda el PDF
-    doc.save('humidity-report.pdf');
+  const downloadPDF = (days: number) => {
+    handleDownloadPDF(days, filteredItems, greenhouseNames, "Humidities");
   };
 
   return (
     <>
-      <div className="flex items-center justify-end gap-x-4 mb-4">
-        <Button onClick={handleDownloadPDF} className='ml-4'><FileText strokeWidth={2} className='w-3 h-3 mr-2' /> Download Report</Button>
-      </div>
-      <HeaderCompanies title="Humidities" onSearch={handleSearch} />
+      <HeaderCompanies title="Humidities" onSearch={handleSearch} handleDownloadPDF={downloadPDF}  />
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px] cursor-pointer" onClick={() => handleSort('id')}>
-              ID <SortArrow order="asc" active={order.column === 'id' && order.order === 'asc'} />
-              <SortArrow order="desc" active={order.column === 'id' && order.order === 'desc'} />
-            </TableHead>
-            <TableHead onClick={() => handleSort('name')} className="cursor-pointer">
-              Name <SortArrow order="asc" active={order.column === 'name' && order.order === 'asc'} />
-              <SortArrow order="desc" active={order.column === 'name' && order.order === 'desc'} />
-            </TableHead>
-            <TableHead onClick={() => handleSort('value')} className="cursor-pointer">
-              Value <SortArrow order="asc" active={order.column === 'value' && order.order === 'asc'} />
-              <SortArrow order="desc" active={order.column === 'value' && order.order === 'desc'} />
-            </TableHead>
-            <TableHead onClick={() => handleSort('createdAt')} className="cursor-pointer">
-              Created at <SortArrow order="asc" active={order.column === 'createdAt' && order.order === 'asc'} />
-              <SortArrow order="desc" active={order.column === 'createdAt' && order.order === 'desc'} />
-            </TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredItems.map((greenhouse, index) => (
-            <TableRow key={greenhouse.id}>
-              <TableCell>{greenhouse.id}</TableCell>
-              <TableCell className="my-4 bg-green-300 hover:bg-green-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">{greenhouseNames[greenhouse.greenhouseId]}</TableCell>
-              <TableCell className="font-medium">{greenhouse.value ? greenhouse.value : '0'}</TableCell>
-              <TableCell className="font-medium">
-                {greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleDateString('en-US') : ''}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <Dialog open={openModalEditIndex === index} onOpenChange={(isOpen) => setOpenModalEditIndex(isOpen ? index : null)}>
-                    <DialogTrigger asChild>
-                      <Button className="text-blue-700 hover:text-blue-900 bg-white hover:bg-gray-200">
-                        <Edit />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Edit Temperature</DialogTitle>
-                        <DialogDescription>Edit and configure your Temperature</DialogDescription>
-                      </DialogHeader>
-                      <FormCreateCustomer greenhouseData={greenhouses[index]} setOpenModalCreate={() => setOpenModalEditIndex(null)} />
-                    </DialogContent>
-                  </Dialog>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => deleteGreenhouse(greenhouse.id)}
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <GreenhouseTable
+        greenhouses={greenhouses}
+        greenhouseNames={greenhouseNames}
+        currentItems={currentItems}
+        openModalEditIndex={openModalEditIndex}
+        setOpenModalEditIndex={setOpenModalEditIndex}
+        handleSort={handleSort}
+        order={order}
+        deleteGreenhouse={deleteGreenhouse}
+        FormComponent={FormCreateCustomer}
+      />
+      <Paginate
+        currentPage={currentPage}
+        totalItems={filteredItems.length}
+        itemsPerPage={itemsPerPage}
+        paginate={paginate}
+      />
     </>
   );
 }
