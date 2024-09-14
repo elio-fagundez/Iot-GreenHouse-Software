@@ -41,7 +41,8 @@ const Page = () => {
 
   const [filteredData, setFilteredData] = useState<InitialData>({} as InitialData);
 
-  
+
+
 
   useEffect(() => {
 

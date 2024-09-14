@@ -8,7 +8,7 @@ interface BrightnessGraphicsProps {
 
 export default function BrightnessGraphics({ data, title }: BrightnessGraphicsProps) {
     return (
-        <div className='shadow-sm bg-background rounded-lg p-5 my-2'>
+        <div className='shadow-sm bg-background rounded-lg p-5 my-2 h-full'>
             <GraphicLine data={data} title={title} fill="url(#colorEv)" label='Luminosity' />
         </div>
     )

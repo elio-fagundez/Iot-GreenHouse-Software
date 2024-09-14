@@ -5,6 +5,8 @@ import { CardSummary } from "./components/CardSummary";
 import { GreenHouseImage } from "./components/GreenHouseImage";
 import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
 import { useGreenhouse } from '@/app/GreenhouseContext';
+import { useEffect, useState } from "react";
+import axios from 'axios';
 
 interface InitialData {
     temperature: any;
@@ -42,6 +44,9 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
     const dataAllHumidities = initialData.dataAllHumidities;
     const dataAllBrightness = initialData.dataAllBrightness;
     const dataAllSoilHumidities = initialData.dataAllSoilHumidities;
+
+ 
+
     return (
         <div>
             <div>
@@ -49,7 +54,7 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
                     <h2 className="text-[24px] border-green-400 border-b-2">{selectedGreenhouse && (selectedGreenhouse as any)?.label}</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-x-4  min-h-[400px] ">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-24">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-full">
 
                         <div className="col-span-2 flex justify-center text-2xl">Sensors</div>
                         {dataTemperature && (
@@ -116,7 +121,7 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
                     </div>
 
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-24">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-full lg:h-[50px]">
                         <div className="col-span-2 flex justify-center text-2xl">Actuators</div>
                         {dataFan1 && (
                             <Link href="/fan1">
@@ -167,25 +172,26 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
                         )}
                     </div>
 
-                    <div className="col-span-1  max-h-80 lg:flex">
+                    <div className="col-span-1  max-h-80 lg:flex lg:flex-col items-center hidden">
                         <div className="col-span-2 flex justify-center text-2xl">GPS Information</div>
-                        <GreenHouseImage />
+                       <GreenHouseImage /> 
+
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 xl:grid-cols-4 md:gap-x-2 mt-12">
                     <div className="col-span-4 flex justify-center text-2xl">Flow Charts</div>
-                    <div className="col-span-2 flex flex-col">
+                    <div className="col-span-2 flex flex-col ">
                         <HumidityGraphics data={dataAllTemperatures} title="Temperature" />
                     </div>
                      <div className="col-span-2 flex  flex-col">
                         <HumidityGraphics data={dataAllHumidities} title="Humidity" />
                     </div>
-                    <div className="col-span-2 flex  flex-col">
+                    <div className="col-span-2 flex  flex-col ">
                         <HumidityGraphics data={dataAllBrightness} title="Luminosity" />
 
                     </div>
-                   <div className="col-span-2 flex  flex-col">
+                   <div className="col-span-2 flex  flex-col ">
                         <HumidityGraphics data={dataAllSoilHumidities} title="Soil Humidities" />
                     </div>
                 </div> 

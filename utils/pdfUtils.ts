@@ -1,4 +1,4 @@
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 interface Greenhouse {
@@ -42,19 +42,45 @@ export const handleDownloadPDF = (
     return acc;
   }, {} as { [key: string]: Greenhouse[] });
 
-  const selectedData = Object.values(groupedData).map((group) => group[0]);
+  let startY = 30;
 
-  const data = selectedData.map((greenhouse) => [
-    greenhouse.id,
-    greenhouseNames[greenhouse.greenhouseId],
-    greenhouse.value ? `${greenhouse.value} °C` : '0 °C',
-    greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleString('en-US') : '',
-  ]);
+  Object.keys(groupedData).forEach((date) => {
+    const data = groupedData[date].map((greenhouse) => [
+      greenhouse.id,
+      greenhouseNames[greenhouse.greenhouseId],
+      greenhouse.value ? `${greenhouse.value} °C` : '0 °C',
+      greenhouse.createdAt ? new Date(greenhouse.createdAt).toLocaleString('en-US') : '',
+    ]);
 
-  doc.autoTable({
-    startY: 30,
-    head: [['ID', 'Name', 'Value', 'Created at']],
-    body: data,
+    doc.text(`Date: ${date}`, 14, startY);
+    startY += 10;
+
+    doc.autoTable({
+      startY: startY,
+      head: [['ID', 'Name', 'Value', 'Created at']],
+      body: data,
+      styles: {
+        fontSize: 10,
+        cellPadding: 3,
+        overflow: 'linebreak',
+        halign: 'center',
+        valign: 'middle',
+        fillColor: [255, 255, 255],
+        textColor: [0, 0, 0],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.1,
+      },
+      headStyles: {
+        fillColor: [22, 160, 133],
+        textColor: [255, 255, 255],
+        fontSize: 12,
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240],
+      },
+    });
+
+    startY = doc.lastAutoTable.finalY + 10; // Ajusta la posición para la siguiente tabla
   });
 
   // Guarda el PDF

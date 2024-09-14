@@ -44,7 +44,7 @@ export function HeaderCompanies({ title, onSearch, handleDownloadPDF }: HeaderCo
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 handleDownloadPDF={(days: number) => {
-                    handleDownloadPDF(days);
+                    handleDownloadPDF(days, "Report Title");
                     closeModal();
                 }}
             />

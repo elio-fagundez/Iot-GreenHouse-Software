@@ -146,23 +146,22 @@ export default function Page() {
     handleDownloadPDF(days, filteredItems, greenhouseNames, "Temperature");
   };
 
+  const [data, setData] = useState([]);
+
+
   return (
     <>
    
-      <HeaderCompanies title="Temperatures" onSearch={handleSearch} handleDownloadPDF={downloadPDF}  />
+      <HeaderCompanies title="Temperatures" onSearch={handleSearch} handleDownloadPDF={downloadPDF}   />
 
 
       <GreenhouseTable
-        greenhouses={greenhouses}
-        greenhouseNames={greenhouseNames}
         currentItems={currentItems}
-        openModalEditIndex={openModalEditIndex}
         setOpenModalEditIndex={setOpenModalEditIndex}
         handleSort={handleSort}
-        order={order}
         deleteGreenhouse={deleteGreenhouse}
-        FormComponent={FormCreateCustomer}
       />
+
 
       <Paginate
         currentPage={currentPage}

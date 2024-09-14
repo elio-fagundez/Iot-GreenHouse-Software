@@ -20,18 +20,14 @@ interface GreenhouseTableProps {
     currentItems: Greenhouse[];
     setOpenModalEditIndex: (index: number | null) => void;
     handleSort: (column: keyof Greenhouse | 'name') => void;
-    order: { column: keyof Greenhouse | 'name'; order: 'asc' | 'desc' };
     deleteGreenhouse: (id: number) => void;
-    FormComponent: React.ComponentType<any>;
 }
 
 const GreenhouseTable: React.FC<GreenhouseTableProps> = ({
     currentItems,
     setOpenModalEditIndex,
     handleSort,
-    order,
     deleteGreenhouse,
-    FormComponent
 }) => {
     console.log("currentItems:", currentItems);
     return (

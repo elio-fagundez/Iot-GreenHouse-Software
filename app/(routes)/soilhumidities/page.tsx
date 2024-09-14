@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { HeaderCompanies } from '@/components/HeaderTable/HeaderCompanies';
 import { toast } from "@/components/ui/use-toast";
-import jsPDF from 'jspdf'; // Importa jsPDF
 import 'jspdf-autotable'; // Importa el plugin autotable
 import Paginate from '@/components/Pagination/Paginate';
 import GreenhouseTable from '@/components/Tables/GreenHouseTable';
@@ -163,15 +162,10 @@ export default function Page() {
       <HeaderCompanies title="Soil Humidities" onSearch={handleSearch} handleDownloadPDF={downloadPDF}  />
 
       <GreenhouseTable
-        greenhouses={greenhouses}
-        greenhouseNames={greenhouseNames}
         currentItems={currentItems}
-        openModalEditIndex={openModalEditIndex}
         setOpenModalEditIndex={setOpenModalEditIndex}
         handleSort={handleSort}
-        order={order}
         deleteGreenhouse={deleteGreenhouse}
-        FormComponent={FormCreateCustomer}
       />
 
       <Paginate
