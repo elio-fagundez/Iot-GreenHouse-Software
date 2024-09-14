@@ -166,17 +166,13 @@ export default function Page() {
  
 <HeaderCompanies title="Co2" onSearch={handleSearch} handleDownloadPDF={downloadPDF}  />
 
-      <GreenhouseTable
-        greenhouses={greenhouses}
-        greenhouseNames={greenhouseNames}
+<GreenhouseTable
         currentItems={currentItems}
-        openModalEditIndex={openModalEditIndex}
         setOpenModalEditIndex={setOpenModalEditIndex}
         handleSort={handleSort}
-        order={order}
         deleteGreenhouse={deleteGreenhouse}
-        FormComponent={FormCreateCustomer}
       />
+
       <Paginate
         currentPage={currentPage}
         totalItems={filteredItems.length}
