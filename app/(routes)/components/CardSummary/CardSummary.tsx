@@ -10,16 +10,16 @@ export function CardSummary(props: CardSummaryProps) {
     const convertToFahrenheit = (celsius: number) => (celsius * 9 / 5) + 32
 
     const displayValue = title === 'Temperature'
-        ? `${total?.toFixed(2)}°C / ${convertToFahrenheit(total as any)?.toFixed(2)}°F`
-        : total?.toFixed(2);
+    ? `${parseFloat(total)?.toFixed(2)}°C / ${convertToFahrenheit(parseFloat(total))?.toFixed(2)}°F`
+    : parseFloat(total)?.toFixed(2);
 
     return (
         <div
         className={`shadow-sm rounded-lg h-32 p-5 py-3 hover:shadow-lg transition text-white cursor-pointer ${
             title === 'Temperature' 
-              ? (total > 25 ? 'bg-red-500' : 'bg-green-500') 
+              ? (parseFloat(total) > 25 ? 'bg-red-500' : 'bg-green-500') 
               : title === 'Luminosity' 
-              ? (total > 1000 ? 'bg-yellow-600' : total <= 25 ? 'bg-black' : 'bg-blue-900') 
+              ? (parseFloat(total) > 1000 ? 'bg-yellow-600' : parseFloat(total) <= 25 ? 'bg-black' : 'bg-blue-900') 
               : 'bg-[#3a414a]'
           }`}
         >
@@ -34,7 +34,7 @@ export function CardSummary(props: CardSummaryProps) {
                 <p className='text-2xl'>
                     {(title === 'Lamp 1' || title === 'Pump 1' || title === 'Heater 1') ? (
                         <span className="text-2xl pl-2">
-                            {total === 1 ? <strong>ON</strong> : 'ON'} / {total === 0 ? <strong>OFF</strong> : 'OFF'}
+                            {parseFloat(total) === 1 ? <strong>ON</strong> : 'ON'} / {parseFloat(total) === 0 ? <strong>OFF</strong> : 'OFF'}
                         </span>
                     ) : displayValue}
                     {title === 'Humidity' && <span className="text-2xl pl-2">%</span>}
