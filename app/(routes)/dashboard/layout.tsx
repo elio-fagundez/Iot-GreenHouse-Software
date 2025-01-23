@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { GreenhouseProvider } from "@/app/GreenhouseContext"; 
+import Footer from "@/components/Landing/footer";
 
 export default function LayoutDashboard({ children }: { children: React.ReactNode }) {
   const [allGreenhouse, setDataAllGreenhouse] = useState([]);

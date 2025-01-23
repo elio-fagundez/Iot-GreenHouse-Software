@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/image";
 
 export function Features() {
   const features = [
@@ -12,21 +12,21 @@ export function Features() {
       title: "Efficiently support and grow your IoT business",
       description:
         "GreenHouse App make it easy to configure and deeply customize beautiful, feature-rich apps without a line of code, yet both maintain high performance and an unparalleled app experience with GreenHouse.",
-           image: "/service2.png",
+      image: "/service2.png",
     },
     {
       title: "Flexible Connection and protocol option",
       description:
         "From standar communication protocols (eg.MQTT,HTTP) to packaged firmware solutions, GreenHouse takes care of device connection management for you on WiFi, Ethernet, Cellular, LoRaWAN, or Satellite.",
-           image: "/service3.png",
+      image: "/service3.png",
     },
     {
       title: "Flexible Connection and protocol option",
       description:
         "From standar communication protocols (eg.MQTT,HTTP) to packaged firmware solutions, GreenHouse takes care of device connection management for you on WiFi, Ethernet, Cellular, LoRaWAN, or Satellite.",
-           image: "/service4.png",
+      image: "/service4.png",
     },
-  ]
+  ];
 
   return (
     <section className="py-24">
@@ -38,10 +38,13 @@ export function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group border relative flex  items-end overflow-hidden rounded-2xl bg-gray-100 p-8 transition-all hover:scale-[1.02] h-[400px] md:h-[690px]"
+              className="group border relative flex items-end overflow-hidden rounded-2xl bg-gray-100 p-8 transition-all hover:scale-[1.02] h-[400px] md:h-[690px]"
             >
               <div className="relative z-10 pb-24">
-                <h3 className="mb-4 text-2xl font-semibold">{feature.title}</h3>
+                <h3 className="mb-4 text-2xl font-semibold group-hover:text-black">
+                  {feature.title}
+                  <span className="block h-1 mt-1 w-0 bg-emerald-500 transition-all duration-500 group-hover:w-full"></span>
+                </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </div>
               <div className="absolute inset-0 z-0 transition-transform duration-500 group-hover:scale-110">
@@ -59,6 +62,5 @@ export function Features() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

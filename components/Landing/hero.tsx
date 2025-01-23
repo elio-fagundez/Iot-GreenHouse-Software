@@ -1,6 +1,8 @@
+import FloatingUIShowcase from "./floatinguishowcase";
+
 export function Hero() {
     return (
-      <section className="pt-44 pb-12">
+      <section className="pt-44 ">
         <div className="container flex flex-col items-center text-center">
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-6xl">
             Embrace The Future of Gardening with <span className="text-emerald-500">Plant Tracker Today!</span>
@@ -17,6 +19,10 @@ export function Hero() {
               Sign Up
             </button>
           </div>
+        </div>
+
+        <div className="lg:flex hidden justify-center mt-16 max-w-[80%] mx-auto">
+        <FloatingUIShowcase />
         </div>
       </section>
     )

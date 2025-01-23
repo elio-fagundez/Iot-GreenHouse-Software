@@ -5,8 +5,6 @@ import { CardSummary } from "./components/CardSummary";
 import { GreenHouseImage } from "./components/GreenHouseImage";
 import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
 import { useGreenhouse } from '@/app/GreenhouseContext';
-import { useEffect, useState } from "react";
-import axios from 'axios';
 
 interface InitialData {
     temperature: any;
