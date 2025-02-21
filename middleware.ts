@@ -1,8 +1,15 @@
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-  publicRoutes: ["/api/uploadthing", "/", "/sign-in", "/sign-up", "/about", "/how-works",
-     "/services/customized-products",
+  publicRoutes: [
+    "/api/uploadthing",
+    "/",
+    "/sign-in",
+    "/sign-up",
+    "/about",
+    "/how-works",
+    "/contact",
+    "/services/customized-products",
     "/services/development-of-iot-web-platforms-for-greenhouses",
     "/services/installation-and-maintenance",
     "/services/remote-support-ecosystem",
