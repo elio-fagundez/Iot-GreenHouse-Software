@@ -10,7 +10,7 @@ export function Sidebar() {
             <div key={i} className="w-1.5 h-1.5 bg-[#00A651] rounded-full" />
           ))}
         </div>
-        <span className="font-semibold">Greenhouse IoT</span>
+        <span className="font-semibold">Bloomiot</span>
       </div>
 
       <nav className="space-y-6">
@@ -18,7 +18,7 @@ export function Sidebar() {
           <h4 className="text-sm font-medium mb-2 text-muted-foreground px-2">GENERAL</h4>
           <div className="space-y-1">
             <Link
-              href="#"
+              href="/dashboard"
               className="flex items-center gap-3 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent"
             >
               <LayoutDashboard size={16} />

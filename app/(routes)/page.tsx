@@ -1,23 +1,32 @@
-import { Features } from '@/components/Landing/features'
-import FeatureSection from '@/components/Landing/featuresection'
-import Footer from '@/components/Landing/footer'
-import { Hero } from '@/components/Landing/hero'
-import { Navbar } from '@/components/Landing/navbar'
-import PricingSection from '@/components/Landing/pricingSection'
-import React from 'react'
+import { Features } from "@/components/Landing/features";
+import FeatureSection from "@/components/Landing/featuresection";
+import { Hero } from "@/components/Landing/hero";
+import PricingSection from "@/components/Landing/pricingSection";
+import React from "react";
+import LayoutHome from "./LayoutHome";
+import { auth } from "@clerk/nextjs";
+
+export const metadata = {
+  title: "Bloomiot - Smart Greenhouse Solutions",
+  description:
+    "Discover Bloomiot's smart greenhouse solutions. Monitor and manage your greenhouse with our IoT web platform.",
+  keywords:
+    "smart greenhouse, IoT, agriculture, Bloomiot, greenhouse monitoring, greenhouse management",
+};
+
+
 
 const page = () => {
   return (
-    <main>
-    <Navbar />
-    <Hero />
-    <Features />
-    <FeatureSection />
-    <PricingSection />
-    <Footer />
+    <LayoutHome>
+      <main>
+        <Hero />
+        <Features />
+        <FeatureSection />
+        <PricingSection />
+      </main>
+    </LayoutHome>
+  );
+};
 
-  </main>
-  )
-}
-
-export default page
+export default page;

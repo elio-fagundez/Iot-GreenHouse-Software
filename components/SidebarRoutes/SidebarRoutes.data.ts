@@ -13,12 +13,12 @@ export const dataGeneralSidebar = [
     {
         icon: PanelsTopLeft,
         label: 'Dashboard',
-        href: '/'
+        href: '/dashboard'
     },
     {
         icon: HousePlus,
         label: 'Green Houses',
-        href: '/greenhouses'
+        href: '/dashboard/greenhouses'
     }
 ]
 
@@ -27,71 +27,71 @@ export const dataToolsSidebar = [
     {
         icon: Thermometer,
         label: 'Temperatures',
-        href: '/temperatures'
+        href: '/dashboard/temperatures'
     },
     {
         icon: Droplet,
         label: 'Humidities',
-        href: '/humidities'
+        href: '/dashboard/humidities'
     },
     {
         icon: SunDim,
         label: 'Brightnesses',
-        href: '/brightnesses'
+        href: '/dashboard/brightnesses'
     },
     {
         icon: Heater,
         label: 'Soil Humidities',
-        href: '/soilhumidities'
+        href: '/dashboard/soilhumidities'
     },
     {
         icon: Fuel,
         label: 'CO2',
-        href: '/co2'
+        href: '/dashboard/co2'
     },
     {
         icon: Droplets,
         label: 'PH',
-        href: '/ph'
+        href: '/dashboard/ph'
     }
 ]
 
-export const dataSupportSidebar = [ 
+// export const dataSupportSidebar = [ 
 
-    {
-        icon: Settings,
-        label: 'Settings',
-        href: '/settings'
-    },
+//     {
+//         icon: Settings,
+//         label: 'Settings',
+//         href: '/settings'
+//     },
 
-    {
-        icon: ShieldCheck,
-        label: 'Security',
-        href: '/security'
-    },
+//     {
+//         icon: ShieldCheck,
+//         label: 'Security',
+//         href: '/security'
+//     },
 
-]
+// ]
 
 
 export const dataActuatorSidebar = [ 
     {
         icon: Thermometer,
         label: 'Fan 1',
-        href: '/fan1'
+        href: '/dashboard/fan1'
     },
     {
         icon: Droplet,
         label: 'Lamp 1',
-        href: '/lamp1'
+        href: '/dashboard/lamp1'
     },
     {
         icon: SunDim,
         label: 'Pump 1',
-        href: '/pump1'
+        href: '/dashboard/pump1'
     },
     {
         icon: Heater,
         label: 'Heater 1',
-        href: '/heater1'
+        href: '/dashboard/heater1'
     }
 ]

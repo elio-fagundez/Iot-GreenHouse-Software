@@ -18,7 +18,7 @@ import { toast } from "@/components/ui/use-toast"
 
 interface FormCreateCustomerProps {
   setOpenModalCreate: (open: boolean) => void;
-  greenhouseData: any;
+  data: any;
 }
 
 const formSchema = z.object({
@@ -30,17 +30,17 @@ const formSchema = z.object({
 })
 
 
-export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenModalCreate, greenhouseData }) => {
-  console.log("greenhouseData", greenhouseData);
+export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenModalCreate, data }) => {
+  console.log("data", data);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: greenhouseData?.id || "",
-      value: greenhouseData?.value || "",
-      createdAt: greenhouseData?.createdAt || "",
-      updatedAt: greenhouseData?.updatedAt || "",
-      greenhouseId: greenhouseData?.greenhouseId || "",
+      id: data?.id || "",
+      value: data?.value || "",
+      createdAt: data?.createdAt || "",
+      updatedAt: data?.updatedAt || "",
+      greenhouseId: data?.greenhouseId || "",
     },
   })
 
@@ -51,9 +51,9 @@ export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenM
       let method = 'POST';
       let successMessage = "Temperature created successfully";
 
-      // Si greenhouseData existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
-      if (greenhouseData && greenhouseData.id) {
-        url = `${apiUrl}/api/humidities/${greenhouseData.id}`;
+      // Si data existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
+      if (data && data.id) {
+        url = `${apiUrl}/api/humidities/${data.id}`;
         method = 'PUT';
         successMessage = "Temperature updated successfully";
       }

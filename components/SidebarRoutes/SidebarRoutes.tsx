@@ -2,7 +2,7 @@
 
 import SidebarItem from "../SidebarItem/SidebarItem"
 import { Separator } from "@/components/ui/separator"
-import { dataGeneralSidebar, dataSupportSidebar, dataToolsSidebar, dataActuatorSidebar } from "./SidebarRoutes.data"
+import { dataGeneralSidebar, dataToolsSidebar, dataActuatorSidebar } from "./SidebarRoutes.data"
 import { useState } from "react"
 
 export function SidebarRoutes() {
@@ -56,12 +56,12 @@ export function SidebarRoutes() {
                 </div>
                 <Separator />
 
-                <div className="p-2 md:p-6">
+                {/* <div className="p-2 md:p-6">
                     <p>SUPPORT</p>
                     {dataSupportSidebar.map((item, index) => (
                         <SidebarItem key={index} item={item} />
                     ))}
-                </div>
+                </div> */}
             </div>
           
         </div>

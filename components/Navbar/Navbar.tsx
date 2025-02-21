@@ -32,35 +32,7 @@ export default function Navbar({ greenhouses }: NavbarProps) {
     });
   };
 
-  const customStyles = {
-    control: (provided: any) => ({
-      ...provided,
-      backgroundColor: '#050b1b',
-      color: 'white',
-      borderColor: '#050b1b',
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      backgroundColor: '#050b1b',
-      color: 'white',
-    }),
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: 'white',
-    }),
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: 'white',
-    }),
-    option: (provided: any, state: any) => ({
-      ...provided,
-      backgroundColor: state.isSelected ? '#215700' : '#050b1b',
-      color: 'white',
-      '&:hover': {
-        backgroundColor: '#215700',
-      },
-    }),
-  };
+  
 
   return (
     <nav className="flex items-center px-2 gap-x-4 md:px-6 justify-between bg-background border-b h-20">

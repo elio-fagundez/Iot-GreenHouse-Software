@@ -29,10 +29,10 @@ export function Features() {
   ];
 
   return (
-    <section className="py-24">
+    <section className="py-24 bg-white" id="features">
       <div className="container">
         <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-          Introducing the functions of the Tracker <span className="text-emerald-500">Botanical Platform</span>
+        Learn more about our IoT system for <span className="text-[#008D36]"> greenhouses.</span>
         </h2>
         <div className="mt-16 grid gap-8 md:grid-cols-2">
           {features.map((feature, index) => (
@@ -41,9 +41,9 @@ export function Features() {
               className="group border relative flex items-end overflow-hidden rounded-2xl bg-gray-100 p-8 transition-all hover:scale-[1.02] h-[400px] md:h-[690px]"
             >
               <div className="relative z-10 pb-24">
-                <h3 className="mb-4 text-2xl font-semibold group-hover:text-black">
+                <h3 className="mb-4 lg:text-4xl text-lg font-semibold group-hover:text-black">
                   {feature.title}
-                  <span className="block h-1 mt-1 w-0 bg-emerald-500 transition-all duration-500 group-hover:w-full"></span>
+                  <span className="block h-1 mt-1 w-0 bg-[#008D36] transition-all duration-500 group-hover:w-full"></span>
                 </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </div>

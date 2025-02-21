@@ -1,10 +1,11 @@
 "use client";
 import { Zap, Fuel, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan } from "lucide-react";
 import Link from "next/link";
-import { CardSummary } from "./components/CardSummary";
-import { GreenHouseImage } from "./components/GreenHouseImage";
-import HumidityGraphics from "./components/HumidityGraphics/HumidityGraphics";
+import { CardSummary } from "../../components/CardSummary";
+import { GreenHouseImage } from "../../components/GreenHouseImage";
+import HumidityGraphics from "../../components/HumidityGraphics/HumidityGraphics";
 import { useGreenhouse } from '@/app/GreenhouseContext';
+import { useEffect, useState } from "react";
 
 interface InitialData {
     temperature: any;
@@ -24,7 +25,6 @@ interface InitialData {
 
 export default function DashboardPage({ initialData }: { initialData: InitialData }) {
 
-    console.log("initialData 2", initialData);
     const { selectedGreenhouse } = useGreenhouse();
 
 
@@ -43,7 +43,16 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
     const dataAllBrightness = initialData.dataAllBrightness;
     const dataAllSoilHumidities = initialData.dataAllSoilHumidities;
 
- 
+    const [temperatureData, setTemperatureData] = useState(dataTemperature);
+
+      useEffect(() => {
+        const interval = setInterval(() => {
+            setTemperatureData(dataTemperature);
+        }, 1000);
+    
+        return () => clearInterval(interval);
+    }, [dataTemperature]);
+
 
     return (
         <div>
@@ -55,66 +64,64 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 h-full">
 
                         <div className="col-span-2 flex justify-center text-2xl">Sensors</div>
-                        {dataTemperature && (
+                    
                             <Link href="/temperatures">
 
                                 <CardSummary
                                     icon={Fan}
-                                    total={(dataTemperature as any).value}
+                                    total={temperatureData?.value ?? 0}
                                     title="Temperature"
                                     tooltipText="Show Temperature"
                                 />
 
                             </Link>
-                        )}
+                      
 
-                        {dataHumidity && (
+                    
                             <Link href="/humidities">
 
                                 <CardSummary
                                     icon={Droplet}
-                                    total={(dataHumidity as any).value}
+                                    total={(dataHumidity as any)?.value ?? 0}
                                     title="Humidity"
                                     tooltipText="Show Humidity"
                                 />
                             </Link>
-                        )}
+                     
 
-                        {dataBrightness && (
+                  
                             <Link href="/brightnesses">
 
                                 <CardSummary
                                     icon={SunDim}
-                                    total={(dataBrightness as any).value}
+                                    total={(dataBrightness as any)?.value ?? 0}
                                     title="Luminosity"
                                     tooltipText="Show Luminosity"
                                 />
                             </Link>
-                        )}
+                   
 
-                        {dataSoilHumidities && (
+                    
                             <Link href="/soilhumidities">
                                 <CardSummary
                                     icon={Sprout}
-                                    total={(dataSoilHumidities as any).value}
+                                    total={(dataSoilHumidities as any)?.value ?? 0}
                                     title="Soil Humidity"
                                     tooltipText="Show Soil Humidity"
                                 />
                             </Link>
-                        )}
 
-                        {dataCo2 && (
+                      
                             <Link href="/co2">
 
                                 <CardSummary
                                     icon={Fuel}
-                                    total={(dataCo2 as any).value}
+                                    total={(dataCo2 as any)?.value ?? 0}
                                     title="CO2"
                                     tooltipText="Show CO2"
                                 />
                             </Link>
-                        )}
-
+              
                        
                     </div>
 
@@ -122,26 +129,26 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2  h-full lg:h-[50px]">
                         <div className="col-span-2 flex justify-center text-2xl">Actuators</div>
                         {dataFan1 && (
-                            <Link href="/fan1">
+                           
                                 <CardSummary
                                     icon={Fan}
-                                    total={(dataFan1 as any).value}
+                                    total={(dataFan1 as any)?.value ?? 0}
                                     title="Fan 1"
                                     tooltipText="Show Fan 1"
                                 />
-                            </Link>
+                          
                         )}
 
                         {dataLamp1 && (
-                            <Link href="/lamp1">
+                     
 
                                 <CardSummary
                                     icon={Lightbulb}
-                                    total={(dataLamp1 as any).value}
+                                    total={(dataLamp1 as any)?.value ?? 0}
                                     title="Lamp 1"
                                     tooltipText="Show Lamp 1"
                                 />
-                            </Link>
+                         
                         )}
 
                         {dataPump1 && (
@@ -149,7 +156,7 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
 
                                 <CardSummary
                                     icon={Zap}
-                                    total={(dataPump1 as any).value}
+                                    total={(dataPump1 as any)?.value ?? 0}
                                     title="Pump 1"
                                     tooltipText="Show Pump 1"
                                 />
@@ -161,7 +168,7 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
 
                                 <CardSummary
                                     icon={Heater}
-                                    total={(dataHeater1 as any).value}
+                                    total={(dataHeater1 as any)?.value ?? 0}
                                     title="Heater 1"
                                     tooltipText="Show Heater 1"
                                 />
@@ -172,7 +179,10 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
 
                     <div className="col-span-1  max-h-80 lg:flex lg:flex-col items-center hidden">
                         <div className="col-span-2 flex justify-center text-2xl">GPS Information</div>
-                       <GreenHouseImage /> 
+                        <div className="py-4 ">
+                        <div id="ww_fa4de6d6a8306" v='1.3' loc='id' a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":["wl4843"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>Weather Data Source: <a href="https://wetterlang.de" id="ww_fa4de6d6a8306_u" target="_blank">30 tage wetter</a></div><script async src="https://app3.weatherwidget.org/js/?id=ww_fa4de6d6a8306"></script>
+
+                        </div>
 
                     </div>
                 </div>

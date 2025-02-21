@@ -15,39 +15,40 @@ export default function PricingSection() {
       name: "Free",
       price: "0",
       features: [
-        { name: "Complete Documentation", included: true },
-        { name: "Working Materials in Figma", included: true },
-        { name: "100GB Cloud Storage", included: true },
-        { name: "Email Automation", included: false },
-        { name: "Premium Support", included: false },
+        { name: "Monitoring of up to 3 variables (temperature, humidity, lighting)", included: true },
+        { name: "Email alerts and notifications for 1 month.", included: true },
+        { name: "Reports up to 1 week", included: true },
+        { name: "Email and chat support during business hours.", included: true },
       ],
     },
     {
       name: "Pro",
       price: "49",
       features: [
-        { name: "Complete Documentation", included: true },
-        { name: "Working Materials in Figma", included: true },
-        { name: "100GB Cloud Storage", included: true },
-        { name: "Email Automation", included: true },
-        { name: "Premium Support", included: false },
+        { name: "Includes everything in the Free plan", included: true },
+        { name: "Monitoring of 2 additional variables", included: true },
+        { name: "Remote control of devices (irrigation, ventilation, lighting)", included: true },
+        { name: "Real-time reports and graphs", included: true },
+        { name: "Priority support via chat and phone", included: true },
+        { name: "Integration with some third-party services (e.g., basic agricultural management software)", included: true },
       ],
     },
     {
-      name: "Exclusive",
+      name: "Enterprise",
       price: "99",
       features: [
-        { name: "Complete Documentation", included: true },
-        { name: "Working Materials in Figma", included: true },
-        { name: "100GB Cloud Storage", included: true },
-        { name: "Email Automation", included: true },
-        { name: "Premium Support", included: true },
+        { name: "Includes everything in the Pro plan", included: true },
+        { name: "Custom integrations (ERP, CRM, specific agricultural management systems)", included: true },
+        { name: "Unlimited historical data storage", included: true },
+        { name: "Custom dashboards and predictive analytics", included: true },
+        { name: "AI tools on the platform", included: true },
+        { name: "24/7 support and a dedicated account manager", included: true },
       ],
     },
   ]
 
   return (
-    <section className="py-16 px-4 max-w-7xl mx-auto">
+    <section id="pricing" className="py-16 px-4 max-w-7xl mx-auto bg-white">
       <div className="text-center mb-8">
         <p className="text-[#00A651] font-medium mb-4">Pricing & Plan</p>
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8">
@@ -84,7 +85,7 @@ export default function PricingSection() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <Button className="w-full bg-[#B4E4D1] hover:bg-[#A3D3C0] text-black" variant="secondary">
+              <Button className="w-full bg-[#008D36] text-white font-bold hover:bg-emerald-800" variant="secondary">
                 Try It For Free
               </Button>
               <ul className="space-y-4">
@@ -102,4 +103,3 @@ export default function PricingSection() {
     </section>
   )
 }
-
