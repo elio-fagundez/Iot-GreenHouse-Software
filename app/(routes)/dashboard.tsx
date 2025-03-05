@@ -33,6 +33,7 @@ export default function DashboardPage({ initialData }: { initialData: InitialDat
     const dataBrightness = initialData.brightness;
     const dataSoilHumidities = initialData.soilHumidities;
     const dataCo2 = initialData.co2;
+    console.log("initialData", initialData);
     const dataFan1 = initialData.fan1;
     const dataLamp1 = initialData.lamp1;
     const dataPump1 = initialData.pump1;
