@@ -1,0 +1,42 @@
+.imageContainer {
+    position: relative;
+    width: 100%; 
+    height: 600px;
+    margin: 0 auto;
+  }
+  
+  .pin {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #4081b2;
+    color: #4081b2;
+    padding: 15px;
+    border-radius: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Espacio entre el icono y el texto */
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+  
+.pin:hover {
+    transform: translateY(-5px); /* Mueve el pin hacia arriba al hacer hover */
+    cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+    .imageContainer {
+        position: relative;
+      width: 100%; /* Ajusta el ancho al 100% del contenedor padre */
+      height: "auto"; /* Ajusta el alto automáticamente basado en el nuevo ancho */
+    }
+  }
+
+
+
+  
+
