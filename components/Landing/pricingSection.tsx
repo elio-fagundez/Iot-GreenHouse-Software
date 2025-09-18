@@ -71,7 +71,7 @@ export default function PricingSection() {
         <p className="text-4xl md:text-5xl  text-[#00A651] font-medium mb-4 font-bold">
           Pricing & Plan
         </p>
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8 text-gray-500">
+        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-8 text-gray-800">
           Choose a plan that
           <br />
           suits for your business
@@ -118,12 +118,12 @@ export default function PricingSection() {
                   <li key={feature.name} className="flex items-center gap-2">
                     <Check
                       className={`w-5 h-5 ${
-                        feature.included ? "text-[#00A651]" : "text-gray-300"
+                        feature.included ? "text-[#00A651]" : "text-gray-800"
                       }`}
                     />
                     <span
                       className={
-                        feature.included ? "text-gray-300" : "text-gray-400"
+                        feature.included ? "text-gray-800" : "text-gray-800"
                       }
                     >
                       {feature.name}

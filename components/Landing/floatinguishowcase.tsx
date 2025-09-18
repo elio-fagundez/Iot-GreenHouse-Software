@@ -38,7 +38,7 @@ export default function FloatingUIShowcase() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <span className="text-2xl font-bold">67</span>
-                  <p className="text-xs text-gray-500">mph</p>
+                  <p className="text-xs text-gray-800">mph</p>
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function FloatingUIShowcase() {
         <div className="p-4">
           <div className="flex items-center justify-between">
             <h3 className="font-medium">Growth Metrics</h3>
-            <BarChart3 className="h-5 w-5 text-gray-500" />
+            <BarChart3 className="h-5 w-5 text-gray-800" />
           </div>
           <div className="mt-4 h-[100px] w-full">
             <div className="flex h-full items-end gap-1">

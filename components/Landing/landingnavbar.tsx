@@ -294,7 +294,7 @@ export function Navbar(HasUser: any) {
             </>
           ) : (
             <>
-              <Link href="/sign-in" className="text-gray-200 hover:text-white">
+              <Link href="/login" className="text-gray-200 hover:text-white">
                 <Button
                   variant="ghost"
                   className="text-gray-200 hover:text-white hover:bg-gray-800"
@@ -302,7 +302,7 @@ export function Navbar(HasUser: any) {
                   Log in
                 </Button>
               </Link>
-              <Link href="/sign-up" className="text-gray-200 hover:text-white">
+              <Link href="/register" className="text-gray-200 hover:text-white">
                 <Button className="bg-[#008D36] text-white hover:bg-emerald-600">
                   Sign Up
                 </Button>

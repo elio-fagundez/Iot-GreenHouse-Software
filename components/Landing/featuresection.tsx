@@ -32,7 +32,7 @@ export default function FeatureSection() {
   return (
     <section id="services" className="py-16 px-4 max-w-7xl mx-auto bg-white">
       <div className="text-center mb-16 space-y-4">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-500">
+        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-800">
           Discover the best experience in sustainable crops based on our IOT
           systems for <span className="text-[#00A651]">greenhouses</span>
         </h2>

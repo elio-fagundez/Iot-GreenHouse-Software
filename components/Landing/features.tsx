@@ -31,7 +31,7 @@ export function Features() {
   return (
     <section className="py-24 bg-white" id="features">
       <div className="container">
-        <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-gray-500">
+        <h2 className="text-center text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-gray-800">
           Learn more about our IoT system for{" "}
           <span className="text-[#008D36]"> greenhouses.</span>
         </h2>

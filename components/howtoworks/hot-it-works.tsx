@@ -13,7 +13,7 @@ export function HowItWorks() {
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">How Bloomiot Works</h2>
-          <p className="mt-4 text-gray-500 md:text-xl">
+          <p className="mt-4 text-gray-800 md:text-xl">
             At Bloomiot, we want the automation and monitoring of your greenhouse to be a simple process free of
             technical complications.
           </p>

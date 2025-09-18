@@ -4,7 +4,6 @@ import { Hero } from "@/components/Landing/hero";
 import PricingSection from "@/components/Landing/pricingSection";
 import React from "react";
 import LayoutHome from "./LayoutHome";
-import { auth } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Bloomiot - Smart Greenhouse Solutions",

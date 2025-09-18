@@ -1,12 +1,22 @@
 "use client";
+"use client";
 import Navbar from "@/components/Navbar/Navbar";
 import { Sidebar } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { GreenhouseProvider } from "@/app/GreenhouseContext"; 
 import Footer from "@/components/Landing/footer";
+import { useRouter } from "next/navigation";
+import { useUserId } from "../../../src/hooks/useUserId";
 
 export default function LayoutDashboard({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [allGreenhouse, setDataAllGreenhouse] = useState([]);
+  const { userId, loading } = useUserId();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!userId) router.replace("/login");
+  }, [loading, userId, router]);
 
   useEffect(() => {
     const fetchDataGreenhouses = async () => {
@@ -24,7 +34,7 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
     fetchDataGreenhouses();
   }, []);
 
-  console.log("allGreenhouse", allGreenhouse);
+  if (loading) return null;
 
   return (
     <GreenhouseProvider>

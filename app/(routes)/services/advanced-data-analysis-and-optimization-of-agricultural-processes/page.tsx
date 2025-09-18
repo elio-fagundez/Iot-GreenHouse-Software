@@ -134,7 +134,7 @@ const page = () => {
 
         <div className="w-full bg-gray-50 p-8">
           <div className="text-center mb-16 space-y-4 mx-auto max-w-4xl">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-500">
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-800">
               Do you need a custom web platform?
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
