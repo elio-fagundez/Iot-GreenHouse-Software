@@ -2,13 +2,13 @@
 import Footer from "@/components/Landing/footer";
 import { Navbar } from "@/components/Landing/landingnavbar";
 import React from "react";
-import { useUserId } from "../../src/hooks/useUserId";
+import { useAuth } from "../../src/hooks/useAuth";
 
 const LayoutHome = ({ children }: { children: React.ReactNode}) => {
-  const { userId, loading } = useUserId();
-  const isAuthenticated = !!userId;
+  const { user, loading } = useAuth();
+  const isAuthenticated = !!user;
 
-  console.log("userId", userId);
+  console.log("user", user);
   console.log("isAuthenticated", isAuthenticated);
   return (
     <>

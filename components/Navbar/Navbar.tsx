@@ -1,11 +1,13 @@
 import { useGreenhouse } from '@/app/GreenhouseContext'; // Asegúrate de ajustar la ruta
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { UserButton } from "@clerk/nextjs";
 import { Menu } from "lucide-react";
 import { SidebarRoutes } from "../SidebarRoutes";
 import { ToggleTheme } from "../ToggleTheme";
 import Select from 'react-select';
 import { setCookie } from 'nookies';
+import { logout } from "@/src/utils/logout";
+import { Button } from "@/components/ui/button";
+import { LogOut } from "lucide-react";
 
 interface Greenhouse {
   id: number;
@@ -59,7 +61,10 @@ export default function Navbar({ greenhouses }: NavbarProps) {
       </div>
       <div className="flex gap-x-2 items-center">
         <ToggleTheme />
-        <UserButton />
+        <Button onClick={logout} variant="outline" size="sm">
+          <LogOut className="w-4 h-4 mr-2" />
+          Logout
+        </Button>
       </div>
     </nav>
   );

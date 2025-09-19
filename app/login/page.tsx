@@ -44,9 +44,11 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
-      // Guardar token en localStorage (puedes usar cookies si prefieres)
-      if (data.token) localStorage.setItem("token", data.token);
-      router.push("/"); // Redirige al home o dashboard
+      if (data.twoFactorRequired) {
+        router.push('/verify-code');
+        return;
+      }
+      router.push("/dashboard"); // Redirige al home o dashboard
     } catch (err) {
       setError("Error de conexión");
     } finally {

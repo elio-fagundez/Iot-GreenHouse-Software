@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { UserButton } from "@clerk/nextjs";
 
 export function Navbar(HasUser: any) {
   const isAuth = HasUser.HasUser;
@@ -290,7 +289,6 @@ export function Navbar(HasUser: any) {
               >
                 Dashboard
               </Link>
-              <UserButton />
             </>
           ) : (
             <>

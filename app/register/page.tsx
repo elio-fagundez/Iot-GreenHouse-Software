@@ -15,8 +15,6 @@ import {
 import { Eye, EyeOff, Check, X } from "lucide-react";
 import LayoutHome from "../(routes)/LayoutHome";
 export default function RegisterPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,8 +52,14 @@ export default function RegisterPage() {
     setError("");
     setSuccess("");
     setLoading(true);
-    if (!email || !password) {
-      setError("Email y contraseña requeridos");
+    const { firstName, lastName, email, password, confirmPassword } = formData;
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      setError("Todos los campos son requeridos");
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
       setLoading(false);
       return;
     }
@@ -63,7 +67,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       });
       const data = await res.json();
       if (!res.ok) {

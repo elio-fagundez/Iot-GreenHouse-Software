@@ -46,7 +46,7 @@ export default function Page() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const fetchData = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/temperatures/${greenHouse}`);
+        const response = await fetch(`${apiUrl}/temperatures/${greenHouse}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setGreenhouses(data);
@@ -64,7 +64,7 @@ export default function Page() {
       for (const greenhouse of greenhouses) {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
         try {
-          const response = await fetch(`${apiUrl}/api/greenhouses/${greenhouse.greenhouseId}`);
+          const response = await fetch(`${apiUrl}/greenhouses/${greenhouse.greenhouseId}`);
           if (response.status === 404) {
             console.error(`Error 404: El invernadero con ID ${greenhouse.greenhouseId} no fue encontrado.`);
           } else if (response.headers.get("content-type")?.includes("application/json")) {
@@ -86,7 +86,7 @@ export default function Page() {
   const deleteGreenhouse = async (id: number) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${apiUrl}/api/temperatures/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${apiUrl}/temperatures/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Network response was not ok');
       setGreenhouses(greenhouses.filter(greenhouse => greenhouse.id !== id));
       toast({ title: "Greenhouse removed" });

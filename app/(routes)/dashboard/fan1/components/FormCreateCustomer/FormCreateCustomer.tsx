@@ -55,13 +55,13 @@ export const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ setOpenM
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      let url = `${apiUrl}/api/temperatures/`;
+      let url = `${apiUrl}/temperatures/`;
       let method = 'POST';
       let successMessage = "Temperature created successfully";
 
       // Si greenhouseData existe, cambiar a PUT y ajustar la URL y el mensaje de éxito
       if (greenhouseData && greenhouseData.id) {
-        url = `${apiUrl}/api/temperatures/${greenhouseData.id}`;
+        url = `${apiUrl}/temperatures/${greenhouseData.id}`;
         method = 'PUT';
         successMessage = "Temperature updated successfully";
       }

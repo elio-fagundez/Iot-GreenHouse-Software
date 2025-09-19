@@ -56,49 +56,49 @@ const Dashboard = () => {
     try {
       const greenhouseId = (selectedGreenhouse as any)?.value || 1;
       const temperature = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/temperatures/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/temperatures/${greenhouseId}`
       );
       const humidity = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/humidities/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/humidities/${greenhouseId}`
       );
       const brightness = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/luminosity/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/luminosity/${greenhouseId}`
       );
       const soilHumidities = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/soilhumidities/${greenhouseId}`
       );
       const co2 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/co2/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/co2/${greenhouseId}`
       );
       const fan1 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/fan1/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/fan1/${greenhouseId}`
       );
       const lamp1 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/lamp1/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/lamp1/${greenhouseId}`
       );
       const pump1 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/pump1/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/pump1/${greenhouseId}`
       );
       const heater1 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/heater1/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/heater1/${greenhouseId}`
       );
       const relay1 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/relay1/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/relay1/${greenhouseId}`
       );
       const relay2 = await fetchData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/relay2/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/relay2/${greenhouseId}`
       );
       const dataAllTemperatures = await fetchAllData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/temperatures/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/temperatures/${greenhouseId}`
       );
       const dataAllHumidities = await fetchAllData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/humidities/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/humidities/${greenhouseId}`
       );
       const dataAllBrightness = await fetchAllData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/luminosity/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/luminosity/${greenhouseId}`
       );
       const dataAllSoilHumidities = await fetchAllData(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/soilhumidities/${greenhouseId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/soilhumidities/${greenhouseId}`
       );
 
       const newData = {
