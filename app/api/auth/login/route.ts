@@ -5,7 +5,11 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email, password } = body;
-    const backendRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (!base) {
+      return new Response(JSON.stringify({ error: 'Configuración no válida: falta NEXT_PUBLIC_API_URL' }), { status: 500 });
+    }
+    const backendRes = await fetch(`${base}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -13,6 +17,8 @@ export async function POST(req: Request) {
       body: JSON.stringify({ email, password }),
     });
     const data = await backendRes.json();
+    console.log("data", data);
+
     if (!backendRes.ok) {
       return new Response(JSON.stringify({ error: data.error || 'Error en el login' }), { status: backendRes.status });
     }

@@ -19,6 +19,11 @@ export const dataGeneralSidebar = [
         icon: HousePlus,
         label: 'Green Houses',
         href: '/dashboard/greenhouses'
+    },
+    {
+        icon: BarChart4,
+        label: 'Plans',
+        href: '/dashboard/plans'
     }
 ]
 

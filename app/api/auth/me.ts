@@ -15,7 +15,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Decodificar el token (sin verificar firma, solo para obtener el payload)
     const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
     if (!payload.userId) return res.status(401).json({ error: 'Token inválido' });
-    return res.status(200).json({ userId: payload.userId, email: payload.email });
+    return res.status(200).json({ user: { id: payload.userId, email: payload.email } });
   } catch (e) {
     return res.status(401).json({ error: 'Token inválido' });
   }

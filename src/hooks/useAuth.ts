@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { removeTokenCookie } from "@/src/utils/authCookies";
 
 export function useAuth() {
   const [user, setUser] = useState<null | { email: string; firstName: string; lastName: string }>(null);
@@ -8,18 +7,16 @@ export function useAuth() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { cache: 'no-store', credentials: 'include' })
       .then(async (res) => {
         if (!res.ok) throw new Error("No autorizado");
         const data = await res.json();
+        if (!data?.user) throw new Error('Respuesta inválida del servidor');
         setUser(data.user);
       })
       .catch(() => {
-        removeTokenCookie();
-        // Quitar redirección automática para debug
-        // if (window.location.pathname.startsWith('/dashboard')) {
-        //   router.replace("/login");
-        // }
+        // No eliminar la cookie automáticamente; puede ser un fallo temporal
+        setUser(null);
       })
       .finally(() => setLoading(false));
   }, [router]);

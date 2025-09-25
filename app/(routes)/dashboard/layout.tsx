@@ -13,15 +13,17 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
   const [allGreenhouse, setDataAllGreenhouse] = useState([]);
   const { userId, loading } = useUserId();
 
-  useEffect(() => {
-    if (loading) return;
-    if (!userId) router.replace("/login");
-  }, [loading, userId, router]);
+  // useEffect(() => {
+  //   if (loading) return;
+  //   if (!userId) router.replace("/login");
+  // }, [loading, userId, router]);
 
   useEffect(() => {
     const fetchDataGreenhouses = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/greenhouses`);
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+  if (!base) throw new Error('NEXT_PUBLIC_API_URL no configurada');
+  const response = await fetch(`${base}/greenhouses`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setDataAllGreenhouse(data);

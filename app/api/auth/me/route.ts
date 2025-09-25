@@ -6,11 +6,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      console.error("[auth/me] NEXT_PUBLIC_API_URL no definida");
-      return NextResponse.json({ error: "Configuración incompleta" }, { status: 500 });
-    }
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace(/\/$/, "");
     const backendRes = await fetch(`${apiUrl}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
       // Evitar cache para siempre traer estado actual

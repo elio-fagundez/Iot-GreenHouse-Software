@@ -12,7 +12,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Sesión 2FA no encontrada' }, { status: 401 });
     }
 
-    const backendRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-2fa`, {
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (!base) {
+      return NextResponse.json({ error: 'Configuración no válida (NEXT_PUBLIC_API_URL)' }, { status: 500 });
+    }
+    const backendRes = await fetch(`${base}/auth/verify-2fa`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
