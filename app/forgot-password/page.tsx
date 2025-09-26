@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
                   Check your email
                 </h1>
                 <p className="text-muted-foreground">
-                  We've sent password recovery instructions to your email
+                  We&apos;ve sent password recovery instructions to your email
                   address
                 </p>
               </div>
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
 
                     <p className="text-sm text-muted-foreground">
                       Click the link in the email to reset your password. If you
-                      don't see it, check your spam folder.
+                      don&apos;t see it, check your spam folder.
                     </p>
 
                     <div className="space-y-3 pt-4">
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
                 Forgot your password?
               </h1>
               <p className="text-muted-foreground">
-                No worries! Enter your email and we'll send you reset
+                No worries! Enter your email and we&apos;ll send you reset
                 instructions
               </p>
             </div>
@@ -178,7 +178,7 @@ export default function ForgotPasswordPage() {
 
             <div className="mt-8 text-center">
               <p className="text-sm text-muted-foreground">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/register"
                   className="text-primary hover:text-accent font-medium transition-colors"

@@ -1,3 +1,4 @@
+import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import {
     BarChart4,
     PanelsTopLeft,
@@ -5,7 +6,10 @@ import {
     ShieldCheck,
     CircleHelpIcon,
     HousePlus,
-    Droplets
+    Droplets,
+    CircleDollarSign,
+    UsersRound
+    
 } from 'lucide-react'
 import { Zap, Fuel, Thermometer, Droplet, SunDim, Sprout, Heater, Lightbulb, Fan } from "lucide-react";
 
@@ -24,7 +28,17 @@ export const dataGeneralSidebar = [
         icon: BarChart4,
         label: 'Plans',
         href: '/dashboard/plans'
-    }
+    },
+    {
+        icon: CircleDollarSign,
+        label: 'Plans Management',
+        href: '/dashboard/admin/plans'
+    },
+      {
+        icon: UsersRound,
+        label: 'Users',
+        href: '/dashboard/admin/users'
+    },
 ]
 
 

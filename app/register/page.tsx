@@ -262,7 +262,7 @@ export default function RegisterPage() {
                           <>
                             <X size={12} className="text-destructive" />
                             <span className="text-destructive">
-                              Passwords don't match
+                              Passwords don&apos;t match
                             </span>
                           </>
                         )}
