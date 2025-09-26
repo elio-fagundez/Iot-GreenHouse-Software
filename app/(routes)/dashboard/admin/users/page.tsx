@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,219 +20,267 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { AlertTriangle } from "lucide-react"
 
-// Mock data - en una app real vendría de una API/base de datos
-const initialUsers = [
-  {
-    id: "1",
-    name: "Ana García",
-    email: "ana.garcia@email.com",
-    role: "admin",
-    plan: "Profesional",
-    status: "active",
-    devices: 12,
-    lastLogin: "2024-01-15T10:30:00Z",
-    createdAt: "2023-06-15T08:00:00Z",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "2",
-    name: "Carlos Rodríguez",
-    email: "carlos.rodriguez@empresa.com",
-    role: "user",
-    plan: "Equipo",
-    status: "active",
-    devices: 45,
-    lastLogin: "2024-01-14T16:45:00Z",
-    createdAt: "2023-08-22T14:20:00Z",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "3",
-    name: "María López",
-    email: "maria.lopez@startup.io",
-    role: "user",
-    plan: "Básico",
-    status: "inactive",
-    devices: 3,
-    lastLogin: "2024-01-10T09:15:00Z",
-    createdAt: "2023-11-05T11:30:00Z",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "4",
-    name: "David Chen",
-    email: "david.chen@techcorp.com",
-    role: "user",
-    plan: "Empresarial",
-    status: "active",
-    devices: 156,
-    lastLogin: "2024-01-15T14:20:00Z",
-    createdAt: "2023-04-12T16:45:00Z",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-  {
-    id: "5",
-    name: "Laura Martín",
-    email: "laura.martin@innovate.es",
-    role: "moderator",
-    plan: "Profesional",
-    status: "active",
-    devices: 28,
-    lastLogin: "2024-01-15T12:10:00Z",
-    createdAt: "2023-09-18T10:15:00Z",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-]
+import { useUsers } from "@/hooks/useUsers"
+import type { User } from "@/types/user"
+
+const safeNumber = (value: number | string | null | undefined): number => {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0
+  if (typeof value === "string") {
+    const parsed = Number.parseInt(value, 10)
+    return Number.isNaN(parsed) ? 0 : parsed
+  }
+  return 0
+}
 
 const roleColors = {
-  admin: "bg-red-500/20 text-red-300 border-red-500/30",
-  moderator: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-  user: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+  admin: "border-red-200 bg-red-100 text-red-700 dark:border-red-500/50 dark:bg-red-500/10 dark:text-red-200",
+  moderator:
+    "border-yellow-200 bg-yellow-100 text-yellow-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200",
+  user: "border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-200",
 }
 
 const statusColors = {
-  active: "bg-green-500/20 text-green-300 border-green-500/30",
-  inactive: "bg-gray-500/20 text-gray-300 border-gray-500/30",
-  suspended: "bg-red-500/20 text-red-300 border-red-500/30",
+  active: "border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200",
+  inactive: "border-border bg-muted text-muted-foreground",
+  suspended: "border-red-200 bg-red-100 text-red-700 dark:border-red-500/50 dark:bg-red-500/10 dark:text-red-200",
 }
 
-function AdminUserManager() {
-  const [users, setUsers] = useState(initialUsers)
-  const [selectedUser, setSelectedUser] = useState<any>(null)
+type UserFormValues = {
+  name: string
+  email: string
+  role: string
+  plan: string
+  status: string
+  password?: string
+}
+
+const splitFullName = (fullName: string) => {
+  const trimmed = fullName.trim()
+  if (!trimmed) {
+    throw new Error("El nombre completo es obligatorio")
+  }
+  const parts = trimmed.split(/\s+/)
+  const firstName = parts.shift() ?? trimmed
+  const lastName = parts.length ? parts.join(" ") : firstName
+  return { firstName, lastName }
+}
+
+export function AdminUserManager() {
+  const { users, loading, error, create, update, remove, refresh, setLocalUsers } = useUsers()
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [roleFilter, setRoleFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [isSavingCreate, setIsSavingCreate] = useState(false)
+  const [isSavingEdit, setIsSavingEdit] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
 
-  const activeUsers = users.filter((user) => user.status === "active").length
-  const totalDevices = users.reduce((sum, user) => sum + user.devices, 0)
-  const adminUsers = users.filter((user) => user.role === "admin").length
+  const { totalCount, activeCount, devicesTotal, adminCount, activePercentage, averageDevices } = useMemo(() => {
+    const totalCount = users.length
+    const activeCount = users.filter((user) => user.status === "active").length
+    const devicesTotal = users.reduce((sum, user) => sum + safeNumber(user.devices), 0)
+    const adminCount = users.filter((user) => user.role === "admin").length
+    const activePercentage = totalCount ? Math.round((activeCount / totalCount) * 100) : 0
+    const averageDevices = totalCount ? Math.round(devicesTotal / totalCount) : 0
+    return { totalCount, activeCount, devicesTotal, adminCount, activePercentage, averageDevices }
+  }, [users])
 
-  const handleCreateUser = (userData: any) => {
-    const newUser = {
-      ...userData,
-      id: Date.now().toString(),
-      devices: 0,
-      lastLogin: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      avatar: "/placeholder.svg?height=32&width=32",
+  const filteredUsers = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase()
+    return users.filter((user) => {
+      const matchesSearch =
+        !term ||
+        user.name.toLowerCase().includes(term) ||
+        user.email.toLowerCase().includes(term)
+      const matchesRole = roleFilter === "all" || user.role === roleFilter
+      const matchesStatus = statusFilter === "all" || user.status === statusFilter
+      return matchesSearch && matchesRole && matchesStatus
+    })
+  }, [users, searchTerm, roleFilter, statusFilter])
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return "Sin registro"
     }
-    setUsers([...users, newUser])
-    setIsCreateDialogOpen(false)
-  }
-
-  const handleEditUser = (userData: any) => {
-    setUsers(users.map((user) => (user.id === selectedUser.id ? { ...user, ...userData } : user)))
-    setIsEditDialogOpen(false)
-    setSelectedUser(null)
-  }
-
-  const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter((user) => user.id !== userId))
-  }
-
-  const handleToggleStatus = (userId: string) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, status: user.status === "active" ? "inactive" : "active" } : user,
-      ),
-    )
-  }
-
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesRole = roleFilter === "all" || user.role === roleFilter
-    const matchesStatus = statusFilter === "all" || user.status === statusFilter
-
-    return matchesSearch && matchesRole && matchesStatus
-  })
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) {
+      return "Fecha inválida"
+    }
+    return date.toLocaleDateString("es-ES", {
       year: "numeric",
       month: "short",
       day: "numeric",
     })
   }
 
+  const handleCreateUser = async (values: UserFormValues) => {
+    setIsSavingCreate(true)
+    setActionError(null)
+    try {
+      const { firstName, lastName } = splitFullName(values.name)
+      await create({
+        firstName,
+        lastName,
+        email: values.email,
+        role: values.role,
+        plan: values.plan,
+        status: values.status,
+      })
+      await refresh()
+      setSearchTerm("")
+      setIsCreateDialogOpen(false)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo crear el usuario"
+      setActionError(message)
+      throw err instanceof Error ? err : new Error(message)
+    } finally {
+      setIsSavingCreate(false)
+    }
+  }
+
+  const handleEditUser = async (values: UserFormValues) => {
+    if (!selectedUser) return
+    setIsSavingEdit(true)
+    setActionError(null)
+    try {
+      const { firstName, lastName } = splitFullName(values.name)
+      await update(selectedUser.id, {
+        firstName,
+        lastName,
+        email: values.email,
+        role: values.role,
+        plan: values.plan,
+        status: values.status,
+      })
+      setIsEditDialogOpen(false)
+      setSelectedUser(null)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo actualizar el usuario"
+      setActionError(message)
+      throw err instanceof Error ? err : new Error(message)
+    } finally {
+      setIsSavingEdit(false)
+    }
+  }
+
+  const handleDeleteUser = async (userId: number) => {
+    setActionError(null)
+    try {
+      await remove(userId)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo eliminar el usuario"
+      setActionError(message)
+    }
+  }
+
+  const handleToggleStatus = async (user: User) => {
+    setActionError(null)
+    const nextStatus = user.status === "active" ? "inactive" : "active"
+    setLocalUsers((current) => current.map((u) => (u.id === user.id ? { ...u, status: nextStatus } : u)))
+    try {
+      await update(user.id, { status: nextStatus })
+    } catch (err) {
+      setLocalUsers((current) => current.map((u) => (u.id === user.id ? { ...u, status: user.status } : u)))
+      const message = err instanceof Error ? err.message : "No se pudo actualizar el estado del usuario"
+      setActionError(message)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-black text-white">
-
-
-      <div className="container mx-auto px-6 py-8">
+    <div className="min-h-screen text-foreground">
+      <div className="mx-auto  px-6 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Gestión de Usuarios</h1>
-          <p className="text-gray-400">Administra los usuarios registrados en tu plataforma IoT</p>
+          <h1 className="mb-2 text-3xl font-bold">Gestión de Usuarios</h1>
+          <p className="text-muted-foreground">Administra los usuarios registrados en tu plataforma IoT</p>
         </div>
 
+        {(error || actionError) && (
+          <div className="mb-8 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-destructive">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5" />
+              <div className="flex-1 text-sm">
+                <p className="font-medium">{error || actionError}</p>
+                {error && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void refresh()}
+                    className="mt-3 border-destructive/40 text-destructive hover:bg-destructive/10"
+                  >
+                    Reintentar
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gray-900/50 border-gray-800">
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-4">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-400">Usuarios Totales</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Usuarios Totales</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{users.length}</div>
-              <p className="text-xs text-gray-500 mt-1">+5 nuevos esta semana</p>
+              <div className="text-2xl font-bold text-foreground">{totalCount}</div>
+              <p className="mt-1 text-xs text-muted-foreground">+5 nuevos esta semana</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-800">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-400">Usuarios Activos</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Usuarios Activos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-400">{activeUsers}</div>
-              <p className="text-xs text-gray-500 mt-1">{Math.round((activeUsers / users.length) * 100)}% del total</p>
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{activeCount}</div>
+              <p className="mt-1 text-xs text-muted-foreground">{activePercentage}% del total</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-800">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-400">Dispositivos Totales</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Dispositivos Totales</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-400">{totalDevices}</div>
-              <p className="text-xs text-gray-500 mt-1">
-                Promedio: {Math.round(totalDevices / users.length)} por usuario
-              </p>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{devicesTotal}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Promedio: {averageDevices} por usuario</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-800">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-400">Administradores</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Administradores</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-400">{adminUsers}</div>
-              <p className="text-xs text-gray-500 mt-1">Con permisos completos</p>
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400">{adminCount}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Con permisos completos</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Actions Bar */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">🔍</span>
               <Input
                 placeholder="Buscar usuarios..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gray-900/50 border-gray-800 text-white placeholder-gray-400 w-64"
+                className="w-64 pl-10"
               />
             </div>
 
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-32 bg-gray-900/50 border-gray-800 text-white">
+              <SelectTrigger className="w-32">
                 <SelectValue placeholder="Rol" />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-800">
+              <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="moderator">Moderador</SelectItem>
@@ -241,10 +289,10 @@ function AdminUserManager() {
             </Select>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-32 bg-gray-900/50 border-gray-800 text-white">
+              <SelectTrigger className="w-32">
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-800">
+              <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="active">Activo</SelectItem>
                 <SelectItem value="inactive">Inactivo</SelectItem>
@@ -255,52 +303,69 @@ function AdminUserManager() {
 
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-white text-black hover:bg-gray-200">
-                <span className="mr-2">➕</span>
+              <Button className="gap-2">
+                <span className="text-lg">➕</span>
                 Crear Usuario
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-2xl">
+            <DialogContent className="max-w-2xl bg-background text-foreground">
               <DialogHeader>
                 <DialogTitle>Crear Nuevo Usuario</DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription className="text-muted-foreground">
                   Registra un nuevo usuario en la plataforma
                 </DialogDescription>
               </DialogHeader>
-              <UserForm onSubmit={handleCreateUser} onCancel={() => setIsCreateDialogOpen(false)} />
+                <UserForm
+                  onSubmit={handleCreateUser}
+                  onCancel={() => setIsCreateDialogOpen(false)}
+                  isSubmitting={isSavingCreate}
+                />
             </DialogContent>
           </Dialog>
         </div>
 
         {/* Users Table */}
-        <Card className="bg-gray-900/50 border-gray-800">
+        <Card className="border-border shadow-sm">
           <CardHeader>
-            <CardTitle className="text-white">Usuarios Registrados</CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardTitle>Usuarios Registrados</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Gestiona todos los usuarios de tu plataforma IoT
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow className="border-gray-800 hover:bg-gray-800/50">
-                  <TableHead className="text-gray-300">Usuario</TableHead>
-                  <TableHead className="text-gray-300">Rol</TableHead>
-                  <TableHead className="text-gray-300">Plan</TableHead>
-                  <TableHead className="text-gray-300">Dispositivos</TableHead>
-                  <TableHead className="text-gray-300">Estado</TableHead>
-                  <TableHead className="text-gray-300">Último Acceso</TableHead>
-                  <TableHead className="text-gray-300 text-right">Acciones</TableHead>
+                <TableRow className="border-border">
+                  <TableHead className="text-muted-foreground">Usuario</TableHead>
+                  <TableHead className="text-muted-foreground">Rol</TableHead>
+                  <TableHead className="text-muted-foreground">Plan</TableHead>
+                  <TableHead className="text-muted-foreground">Dispositivos</TableHead>
+                  <TableHead className="text-muted-foreground">Estado</TableHead>
+                  <TableHead className="text-muted-foreground">Último Acceso</TableHead>
+                  <TableHead className="text-right text-muted-foreground">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="border-gray-800 hover:bg-gray-800/30">
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                      Cargando usuarios...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                      No se encontraron usuarios.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredUsers.map((user) => (
+                    <TableRow key={user.id} className="border-border hover:bg-muted/40">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Avatar className="w-8 h-8">
+                        <Avatar className="h-8 w-8">
                           <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                          <AvatarFallback className="bg-gray-700 text-white text-xs">
+                          <AvatarFallback className="bg-muted text-xs text-muted-foreground">
                             {user.name
                               .split(" ")
                               .map((n) => n[0])
@@ -308,36 +373,48 @@ function AdminUserManager() {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium text-white">{user.name}</div>
-                          <div className="text-sm text-gray-400">{user.email}</div>
+                          <div className="font-medium text-foreground">{user.name}</div>
+                          <div className="text-sm text-muted-foreground">{user.email}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary" className={roleColors[user.role as keyof typeof roleColors]}>
+                      <Badge
+                        variant="secondary"
+                        className={
+                          roleColors[user.role as keyof typeof roleColors] ??
+                          "border-border bg-muted text-muted-foreground"
+                        }
+                      >
                         {user.role === "admin" ? "Admin" : user.role === "moderator" ? "Moderador" : "Usuario"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="font-medium text-white">{user.plan}</div>
+                      <div className="font-medium text-foreground">{user.plan}</div>
                     </TableCell>
                     <TableCell>
-                      <div className="font-medium text-white">{user.devices}</div>
+                      <div className="font-medium text-foreground">{safeNumber(user.devices)}</div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Switch
                           checked={user.status === "active"}
-                          onCheckedChange={() => handleToggleStatus(user.id)}
+                          onCheckedChange={() => void handleToggleStatus(user)}
                           className="data-[state=checked]:bg-green-600"
                         />
-                        <Badge variant="secondary" className={statusColors[user.status as keyof typeof statusColors]}>
+                        <Badge
+                          variant="secondary"
+                          className={
+                            statusColors[user.status as keyof typeof statusColors] ??
+                            "border-border bg-muted text-muted-foreground"
+                          }
+                        >
                           {user.status === "active" ? "Activo" : user.status === "inactive" ? "Inactivo" : "Suspendido"}
                         </Badge>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-gray-400">{formatDate(user.lastLogin)}</div>
+                      <div className="text-sm text-muted-foreground">{formatDate(user.lastLogin)}</div>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -348,22 +425,23 @@ function AdminUserManager() {
                             setSelectedUser(user)
                             setIsEditDialogOpen(true)
                           }}
-                          className="text-gray-400 hover:text-white hover:bg-gray-800"
+                          className="text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                         >
                           ✏️
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-gray-400 hover:text-red-400 hover:bg-gray-800"
+                          onClick={() => void handleDeleteUser(user.id)}
+                          className="text-muted-foreground hover:bg-muted/60 hover:text-destructive"
                         >
                           🗑️
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -371,10 +449,10 @@ function AdminUserManager() {
 
         {/* Edit Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-2xl">
+          <DialogContent className="max-w-2xl bg-background text-foreground">
             <DialogHeader>
               <DialogTitle>Editar Usuario</DialogTitle>
-              <DialogDescription className="text-gray-400">
+              <DialogDescription className="text-muted-foreground">
                 Modifica la información del usuario seleccionado
               </DialogDescription>
             </DialogHeader>
@@ -386,6 +464,7 @@ function AdminUserManager() {
                   setIsEditDialogOpen(false)
                   setSelectedUser(null)
                 }}
+                isSubmitting={isSavingEdit}
               />
             )}
           </DialogContent>
@@ -395,47 +474,77 @@ function AdminUserManager() {
   )
 }
 
-export default AdminUserManager;
+export default AdminUserManager
 
-function UserForm({
-  initialData,
-  onSubmit,
-  onCancel,
-}: {
-  initialData?: any
-  onSubmit: (data: any) => void
+interface UserFormProps {
+  initialData?: User | null
+  onSubmit: (data: UserFormValues) => Promise<void>
   onCancel: () => void
-}) {
-  const [formData, setFormData] = useState({
+  isSubmitting?: boolean
+}
+
+function UserForm({ initialData, onSubmit, onCancel, isSubmitting = false }: UserFormProps) {
+  const [formData, setFormData] = useState<UserFormValues>({
     name: initialData?.name || "",
     email: initialData?.email || "",
     role: initialData?.role || "user",
     plan: initialData?.plan || "Básico",
     status: initialData?.status || "active",
   })
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    setFormData({
+      name: initialData?.name || "",
+      email: initialData?.email || "",
+      role: initialData?.role || "user",
+      plan: initialData?.plan || "Básico",
+      status: initialData?.status || "active",
+    })
+    setSubmitError(null)
+  }, [initialData])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit(formData)
+    setSubmitError(null)
+
+    const trimmedName = formData.name.trim()
+    if (!trimmedName) {
+      setSubmitError("El nombre completo es obligatorio.")
+      return
+    }
+
+    const trimmedEmail = formData.email.trim()
+    if (!trimmedEmail) {
+      setSubmitError("El email es obligatorio.")
+      return
+    }
+
+    try {
+      await onSubmit({ ...formData, name: trimmedName, email: trimmedEmail })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo guardar el usuario"
+      setSubmitError(message)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-gray-300">
+          <Label htmlFor="name" className="text-foreground">
             Nombre Completo
           </Label>
           <Input
             id="name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white"
+            disabled={isSubmitting}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-gray-300">
+          <Label htmlFor="email" className="text-foreground">
             Email
           </Label>
           <Input
@@ -443,7 +552,7 @@ function UserForm({
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="bg-gray-800 border-gray-700 text-white"
+            disabled={isSubmitting}
             required
           />
         </div>
@@ -451,14 +560,18 @@ function UserForm({
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="role" className="text-gray-300">
+          <Label htmlFor="role" className="text-foreground">
             Rol
           </Label>
-          <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
-            <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+          <Select
+            value={formData.role}
+            onValueChange={(value) => setFormData({ ...formData, role: value })}
+            disabled={isSubmitting}
+          >
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700">
+            <SelectContent>
               <SelectItem value="user">Usuario</SelectItem>
               <SelectItem value="moderator">Moderador</SelectItem>
               <SelectItem value="admin">Administrador</SelectItem>
@@ -466,14 +579,18 @@ function UserForm({
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="plan" className="text-gray-300">
+          <Label htmlFor="plan" className="text-foreground">
             Plan
           </Label>
-          <Select value={formData.plan} onValueChange={(value) => setFormData({ ...formData, plan: value })}>
-            <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+          <Select
+            value={formData.plan}
+            onValueChange={(value) => setFormData({ ...formData, plan: value })}
+            disabled={isSubmitting}
+          >
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700">
+            <SelectContent>
               <SelectItem value="Básico">Básico</SelectItem>
               <SelectItem value="Profesional">Profesional</SelectItem>
               <SelectItem value="Equipo">Equipo</SelectItem>
@@ -482,14 +599,18 @@ function UserForm({
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="status" className="text-gray-300">
+          <Label htmlFor="status" className="text-foreground">
             Estado
           </Label>
-          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-            <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+          <Select
+            value={formData.status}
+            onValueChange={(value) => setFormData({ ...formData, status: value })}
+            disabled={isSubmitting}
+          >
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700">
+            <SelectContent>
               <SelectItem value="active">Activo</SelectItem>
               <SelectItem value="inactive">Inactivo</SelectItem>
               <SelectItem value="suspended">Suspendido</SelectItem>
@@ -498,19 +619,26 @@ function UserForm({
         </div>
       </div>
 
-      <Separator className="bg-gray-800" />
+      <Separator className="bg-border" />
+
+      {submitError && (
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          {submitError}
+        </div>
+      )}
 
       <div className="flex justify-end gap-3">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="border-gray-700 text-gray-300 hover:bg-gray-800 bg-transparent"
+          className="border-border hover:bg-muted"
+          disabled={isSubmitting}
         >
           Cancelar
         </Button>
-        <Button type="submit" className="bg-white text-black hover:bg-gray-200">
-          {initialData ? "Actualizar Usuario" : "Crear Usuario"}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (initialData ? "Actualizando..." : "Creando...") : initialData ? "Actualizar Usuario" : "Crear Usuario"}
         </Button>
       </div>
     </form>

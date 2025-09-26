@@ -2,18 +2,21 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { FileText } from 'lucide-react'
+import { FileText, Plus } from 'lucide-react'
 import { useState, ChangeEvent } from 'react'
 import DownloadModal from './DownloadModal'; 
 
 interface HeaderCompaniesProps {
     title: string;
     onSearch: (searchTerm: string) => void;
-    handleDownloadPDF: (days: number, reportTitle: string) => void;
+    handleDownloadPDF: (days: number, reportTitle?: string) => void;
+    onCreate?: () => void;
+    createLabel?: string;
+    isCreateDisabled?: boolean;
 }
 
 
-export function HeaderCompanies({ title, onSearch, handleDownloadPDF }: HeaderCompaniesProps) {
+export function HeaderCompanies({ title, onSearch, handleDownloadPDF, onCreate, createLabel, isCreateDisabled }: HeaderCompaniesProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -36,15 +39,24 @@ export function HeaderCompanies({ title, onSearch, handleDownloadPDF }: HeaderCo
                     value={searchTerm}
                     onChange={handleSearchChange}
                 />
-                <Button onClick={openModal} className='ml-4'>
+                <Button onClick={openModal} className='ml-2'>
                     <FileText strokeWidth={2} className='w-3 h-3 mr-2' /> Download Report
                 </Button>
+                {onCreate && (
+                    <Button
+                        onClick={onCreate}
+                        className='ml-2'
+                        disabled={isCreateDisabled}
+                    >
+                        <Plus className='w-3 h-3 mr-2' /> {createLabel ?? `Add ${title}`}
+                    </Button>
+                )}
             </div>
             <DownloadModal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 handleDownloadPDF={(days: number) => {
-                    handleDownloadPDF(days, "Report Title");
+                    handleDownloadPDF(days, title);
                     closeModal();
                 }}
             />

@@ -37,14 +37,14 @@ async function fetchJson(url: string, signal?: AbortSignal) {
 }
 
 const Dashboard = () => {
-  const { selectedGreenhouse } = useGreenhouse();
+  const { selectedGreenhouseId } = useGreenhouse();
   const [data, setData] = useState<InitialData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const abortRef = useRef<AbortController | null>(null);
 
   const apiBase = useMemo(() => process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, ""), []);
-  const greenhouseId: number = selectedGreenhouse ?? 1;
+  const greenhouseId: number = selectedGreenhouseId ?? 1;
 
   async function load() {
     // Cancelar cualquier solicitud anterior en vuelo

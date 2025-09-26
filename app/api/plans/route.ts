@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const backendResponse = await proxyToBackend("/api/plans", {
+    const backendResponse = await proxyToBackend("/plans", {
       method: "GET",
       searchParams,
     });
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const payload = await request.json();
-    const backendResponse = await proxyToBackend("/api/plans", {
+    const backendResponse = await proxyToBackend("/plans", {
       method: "POST",
       body: JSON.stringify(payload),
     });

@@ -138,7 +138,7 @@ export function AdminPlanManager() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-[#0a0a0a] dark:text-gray-100">
-      <div className="container mx-auto px-6 py-8">
+      <div className=" mx-auto px-6 py-8">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Plans Management</h1>

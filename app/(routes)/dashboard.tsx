@@ -15,7 +15,8 @@ import Link from "next/link";
 import { CardSummary } from "../../components/CardSummary";
 import HumidityGraphics from "../../components/HumidityGraphics/HumidityGraphics";
 import { useGreenhouse } from "@/app/GreenhouseContext";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/hooks/useAuth";
 import { CardSummaryAct } from "@/components/CardSummary/CardSummaryAct";
 
@@ -44,8 +45,13 @@ export default function DashboardPage({
 }) {
   const { selectedGreenhouse } = useGreenhouse();
   const { user, loading } = useAuth();
+  const router = useRouter();
 
-  console.log("user", user);
+  const fullName = useMemo(() => {
+    if (!user) return null;
+    const trimmed = [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
+    return trimmed.length ? trimmed : null;
+  }, [user]);
 
   const dataTemperature = initialData.temperature;
   const dataHumidity = initialData.humidity;
@@ -120,21 +126,28 @@ export default function DashboardPage({
     return () => clearInterval(interval);
   }, [objActuators]);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [loading, router, user]);
+
   if (loading) return <div>Cargando...</div>;
 
-  // Mostrar mensaje si no hay usuario autenticado
-  // if (!user) return <div className="text-center text-red-500 mt-10">No autenticado. Inicia sesión para ver el dashboard.</div>;
+  if (!user) return null;
 
   return (
     <div>
       <div>
         <div className="flex">
           <h2 className="text-[24px] border-green-400 border-b-2">
-            {selectedGreenhouse && (selectedGreenhouse as any)?.label}
+            {selectedGreenhouse?.name ?? ""}
           </h2>
           <div className="ml-auto text-right">
-            <p className="text-sm text-muted-foreground">Bienvenido, {user?.firstName} {user?.lastName}</p>
-            <p className="text-xs text-muted-foreground">{user?.email}</p>
+            <p className="text-sm text-muted-foreground">
+              Bienvenido, {fullName ?? "Usuario"}
+            </p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
         </div>
         <div className="grid">

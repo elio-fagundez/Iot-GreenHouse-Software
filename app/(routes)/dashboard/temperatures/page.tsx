@@ -39,8 +39,8 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { selectedGreenhouse } = useGreenhouse();
-  const greenHouse = (selectedGreenhouse as any)?.value || 1;
+  const { selectedGreenhouseId } = useGreenhouse();
+  const greenHouse = selectedGreenhouseId ?? 1;
 
   useEffect(() => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;

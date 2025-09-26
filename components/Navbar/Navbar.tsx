@@ -1,37 +1,44 @@
-import { useGreenhouse } from '@/app/GreenhouseContext'; // Asegúrate de ajustar la ruta
+import { useMemo, useEffect } from "react";
+import { useGreenhouse } from "@/app/GreenhouseContext";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { SidebarRoutes } from "../SidebarRoutes";
 import { ToggleTheme } from "../ToggleTheme";
-import Select from 'react-select';
-import { setCookie } from 'nookies';
+import Select from "react-select";
 import { logout } from "@/src/utils/logout";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 
-interface Greenhouse {
-  id: number;
-  name: string;
-}
+export default function Navbar() {
+  const {
+    greenhouses,
+    loading,
+    selectedGreenhouseId,
+    setSelectedGreenhouseId,
+  } = useGreenhouse();
 
-interface NavbarProps {
-  greenhouses: Greenhouse[];
-}
+  const options = useMemo(
+    () =>
+      greenhouses.map((greenhouse) => ({
+        value: greenhouse.id,
+        label: greenhouse.name,
+      })),
+    [greenhouses]
+  );
 
-export default function Navbar({ greenhouses }: NavbarProps) {
-  const { setSelectedGreenhouse } = useGreenhouse();
+  const selectedOption = useMemo(() => {
+    if (!selectedGreenhouseId) return null;
+    return options.find((option) => option.value === selectedGreenhouseId) ?? null;
+  }, [options, selectedGreenhouseId]);
 
-  const options = Array.isArray(greenhouses) ? greenhouses.map(greenhouse => ({
-    value: greenhouse.id,
-    label: greenhouse.name,
-  })) : [];
+  useEffect(() => {
+    if (options.length === 0) return;
+    if (selectedOption) return;
+    setSelectedGreenhouseId(options[0].value);
+  }, [options, selectedOption, setSelectedGreenhouseId]);
 
   const handleChange = (selectedOption: any) => {
-    setSelectedGreenhouse(selectedOption);
-    setCookie(null, 'selectedGreenhouse', selectedOption.value, {
-      maxAge: 30 * 24 * 60 * 60, // 30 días
-      path: '/',
-    });
+    const nextValue = selectedOption?.value ?? null;
+    setSelectedGreenhouseId(nextValue);
   };
 
   
@@ -56,12 +63,16 @@ export default function Navbar({ greenhouses }: NavbarProps) {
             placeholder="Select Green House"
             className="w-full p-2 rounded-lg z-50 dark:bg-[#050b1b] dark:text-white"
             onChange={handleChange}
+            value={selectedOption}
+            isLoading={loading}
+            isClearable={false}
+            instanceId="greenhouse-select"
           />
         </div>
       </div>
       <div className="flex gap-x-2 items-center">
         <ToggleTheme />
-        <Button onClick={logout} variant="outline" size="sm">
+  <Button onClick={() => void logout()} variant="outline" size="sm">
           <LogOut className="w-4 h-4 mr-2" />
           Logout
         </Button>

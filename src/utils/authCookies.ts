@@ -13,6 +13,16 @@ export function removeTokenCookie() {
   destroyCookie(null, 'token', { path: '/' });
 }
 
+export function removeTemp2faCookie() {
+  destroyCookie(null, 'temp2fa', { path: '/' });
+}
+
+export function clearAuthRelatedCookies() {
+  removeTokenCookie();
+  removeTemp2faCookie();
+  destroyCookie(null, 'selectedGreenhouse', { path: '/' });
+}
+
 export function getTokenFromCookie() {
   const cookies = parseCookies();
   return cookies.token || null;
